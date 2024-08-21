@@ -174,7 +174,7 @@ Closes #42
 - **`ci`**: CI 설정 수정 (예: ci: Update GitHub Actions configuration)
 - **`revert`**: 이전 커밋 되돌리기 (예: revert: Revert "feat: Add payment processing module")
 
-  ### Git-flow 전략에 따른 커밋 예시
+### Git-flow 전략에 따른 커밋 예시
   
  **Feature 브랜치 작업**:
  - `feat`: Implement user registration form
