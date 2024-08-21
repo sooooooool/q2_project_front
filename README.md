@@ -148,10 +148,10 @@ To learn React, check out the [React documentation](https://reactjs.org/).
 
 ### Commit 규칙
 
-- 타입(태그): 커밋의 성격을 간결하게 나타냅니다.
-- 주제: 변경 사항을 요약합니다 (50자 이내).
-- 본문: 선택 사항으로, 커밋에 대한 추가 설명이나 이유, 세부사항을 포함할 수 있습니다. 본문은 한 줄 비워둔 뒤 작성하며, 각 줄은 72자를 넘지 않도록 합니다.
-- 이슈 번호: 관련된 이슈 번호를 명시합니다 (있을 경우).
+- **`타입(태그)`**: 커밋의 성격을 간결하게 나타냅니다.
+- **`주제`**: 변경 사항을 요약합니다 (50자 이내).
+- **`본문`**: 선택 사항으로, 커밋에 대한 추가 설명이나 이유, 세부사항을 포함할 수 있습니다. 본문은 한 줄 비워둔 뒤 작성하며, 각 줄은 72자를 넘지 않도록 합니다.
+- **`이슈 번호`**: 관련된 이슈 번호를 명시합니다 (있을 경우).
 ```
 feat: Add user authentication
 
@@ -163,40 +163,40 @@ Closes #42
 
 ### 커밋 메시지 타입(태그)
 
-- feat: 새로운 기능 추가 (예: feat: Add payment processing module)
-- fix: 버그 수정 (예: fix: Correct user login issue)
-- refactor: 코드 리팩토링 (기능 변화 없음) (예: refactor: Optimize API response handling)
-- style: 코드 스타일 수정 (포매팅, 세미콜론 추가 등) (예: style: Reformat code according to ESLint rules)
-- docs: 문서 수정 (예: docs: Update API documentation for v2.0)
-- test: 테스트 코드 추가 또는 수정 (예: test: Add unit tests for user service)
-- chore: 빌드 또는 개발 도구 관련 작업 (예: chore: Update dependencies)
-- perf: 성능 개선 (예: perf: Improve query performance for large datasets)
-- ci: CI 설정 수정 (예: ci: Update GitHub Actions configuration)
-- revert: 이전 커밋 되돌리기 (예: revert: Revert "feat: Add payment processing module")
+- **`feat`**: 새로운 기능 추가 (예: feat: Add payment processing module)
+- **`fix`**: 버그 수정 (예: fix: Correct user login issue)
+- **`refactor`**: 코드 리팩토링 (기능 변화 없음) (예: refactor: Optimize API response handling)
+- **`style`**: 코드 스타일 수정 (포매팅, 세미콜론 추가 등) (예: style: Reformat code according to ESLint rules)
+- **`docs`**: 문서 수정 (예: docs: Update API documentation for v2.0)
+- **`test`**: 테스트 코드 추가 또는 수정 (예: test: Add unit tests for user service)
+- **`chore`**: 빌드 또는 개발 도구 관련 작업 (예: chore: Update dependencies)
+- **`perf`**: 성능 개선 (예: perf: Improve query performance for large datasets)
+- **`ci`**: CI 설정 수정 (예: ci: Update GitHub Actions configuration)
+- **`revert`**: 이전 커밋 되돌리기 (예: revert: Revert "feat: Add payment processing module")
 
   ### Git-flow 전략에 따른 커밋 예시
   
-- Feature 브랜치 작업:
- - feat: Implement user registration form
- - feat: Add password validation logic
+ **Feature 브랜치 작업**:
+ - `feat`: Implement user registration form
+ - `feat`: Add password validation logic
 
--Bugfix 작업:
- - fix: Resolve issue with login redirection
- - fix: Correct API endpoint path
+ **Bugfix 작업**:
+ - `fix`: Resolve issue with login redirection
+ - `fix`: Correct API endpoint path
 
-- Release 브랜치에서 버전 준비:
- - chore: Prepare version 1.2.0 release
- - docs: Update CHANGELOG for 1.2.0 release
+  **Release 브랜치에서 버전 준비**:
+ - `chore`: Prepare version 1.2.0 release
+ - `docs`: Update CHANGELOG for 1.2.0 release
 
-- Hotfix 작업:
- - fix: Critical bug in production environment
- - revert: Revert faulty migration script
+  **Hotfix 작업**:
+ - `fix`: Critical bug in production environment
+ - `revert`: Revert faulty migration script
 
 ### 커밋 메시지 작성 시 Best Practices
-- 작은 커밋: 커밋을 자주, 작은 단위로 나누어 기록합니다. 각 커밋은 독립적으로 이해될 수 있어야 합니다.
-- 의미 있는 메시지: 커밋 메시지는 코드 변경 내용만이 아닌, 변경의 이유도 설명해야 합니다.
-- 현재 시제 사용: 커밋 메시지는 현재 시제로 작성합니다. 예: "Added" 대신 "Add".
-- 관련 이슈 참조: 관련된 이슈 번호를 명시하여 변경 사항과 이슈를 연결합니다.
+- `작은 커밋`: 커밋을 자주, 작은 단위로 나누어 기록합니다. 각 커밋은 독립적으로 이해될 수 있어야 합니다.
+- `의미 있는 메시지`: 커밋 메시지는 코드 변경 내용만이 아닌, 변경의 이유도 설명해야 합니다.
+- `현재 시제 사용`: 커밋 메시지는 현재 시제로 작성합니다. 예: "Added" 대신 "Add".
+- `관련 이슈 참조`: 관련된 이슈 번호를 명시하여 변경 사항과 이슈를 연결합니다.
 
 ### 규약 준수
 모든 팀원은 이 규칙을 준수하여 일관된 Git 커밋 메시지를 작성해야 하며, 이를 통해 프로젝트 관리와 협업이 원활하게 진행될 수 있도록 노력합니다. 규칙을 준수하지 않을 경우, 코드 리뷰에서 지적되어 수정 요청을 받을 수 있습니다.
