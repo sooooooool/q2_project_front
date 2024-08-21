@@ -136,8 +136,8 @@ TypeScript 인터페이스와 타입 정의를 위한 폴더입니다.
 
 ### 1. 패키지 설치
 프로젝트 루트 디렉토리에서 다음 명령어를 치세요.
- npx create-react-app . --template typescript
- npm i / npm start
+- npx create-react-app . --template typescript
+- npm i / npm start
 
 ## Learn More
 
