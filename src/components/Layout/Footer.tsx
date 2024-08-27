@@ -3,12 +3,16 @@ import { Layout } from 'antd';
 
 const { Footer } = Layout;
 
-const FooterComponent: React.FC = () => {
-    return (
-        <Footer style={{ textAlign: 'center' }}>
-            This is the footer content.
-        </Footer>
-    );
-};
+interface CustomFooterProps {
+    className?: string;
+    style?: React.CSSProperties;
+    children?: React.ReactNode;
+  }
+  
+  const CustomFooter: React.FC<CustomFooterProps> = ({ className, style, children }) => (
+    <Footer className={`${className}`} style={style}>
+      {children}
+    </Footer>
+  );
 
-export default FooterComponent;
+export default CustomFooter;

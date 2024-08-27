@@ -1,18 +1,24 @@
 import React from 'react';
 import { Layout, Menu } from 'antd';
 
+import { HomeOutlined, UserOutlined } from '@ant-design/icons';
+
 const { Header } = Layout;
 
-const HeaderComponent: React.FC = () => {
-    return (
-        <Header>
-            <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']}>
-                <Menu.Item key="1">Home</Menu.Item>
-                <Menu.Item key="2">About</Menu.Item>
-                <Menu.Item key="3">Contact</Menu.Item>
-            </Menu>
-        </Header>
-    );
-};
+interface CustomHeaderProps {
+    className?: string;
+    style?: React.CSSProperties;
+    children?: React.ReactNode;
+  }
 
-export default HeaderComponent;
+
+const CustomHeader: React.FC<CustomHeaderProps> = ({ className, style, children }) => (
+<Header className={`${className}`} style={{backgroundColor:"transparent",display:"flex",justifyContent:"center",alignContent:"center", height:"80px"}}>
+    <HomeOutlined style={{ fontSize: '24px', marginRight: '16px', }} />
+        {children}
+    <UserOutlined style={{ fontSize: '24px', marginLeft: 'auto' }} />
+</Header>
+);
+
+
+export default CustomHeader;

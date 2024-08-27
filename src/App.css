@@ -1,3 +1,4 @@
+@import url("https://cdn.jsdelivr.net/gh/wanteddev/wanted-sans@v1.0.3/packages/wanted-sans/fonts/webfonts/static/split/WantedSans.min.css");
 .App {
   text-align: center;
 }
@@ -35,4 +36,35 @@
   to {
     transform: rotate(360deg);
   }
+}
+body {
+  margin: 0;
+  min-width: 360px;
+  max-width: 600px;
+  margin: auto;
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+.ant-layout-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.ant-layout-content {
+  width: 100%;
+  max-width: 540px; /* 모바일 화면에 적합한 최대 너비 */
+  margin: 0 auto;
+  /* padding: 0 10px; */
+}
+
+.ant-card {
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.ant-btn-link {
+  border-radius: 30px;
+}
+
+.ant-btn-link:hover {
+  background-color: #5642cc;
 }
