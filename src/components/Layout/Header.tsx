@@ -2,6 +2,7 @@ import React from 'react';
 import { Layout, Menu } from 'antd';
 
 import { HomeOutlined, UserOutlined } from '@ant-design/icons';
+import { Link } from 'react-router-dom';
 
 const { Header } = Layout;
 
@@ -13,10 +14,14 @@ interface CustomHeaderProps {
 
 
 const CustomHeader: React.FC<CustomHeaderProps> = ({ className, style, children }) => (
-<Header className={`${className}`} style={{backgroundColor:"transparent",display:"flex",justifyContent:"center",alignContent:"center", height:"80px"}}>
-    <HomeOutlined style={{ fontSize: '24px', marginRight: '16px', }} />
+<Header className={`${className}`} style={{backgroundColor:"transparent",display:"flex",justifyContent:"space-between",alignContent:"center", height:"80px"}}>
+    <Link to="/">
+        <HomeOutlined style={{ fontSize: '24px', marginRight: '16px', color:"black"}} />
+    </Link>
         {children}
-    <UserOutlined style={{ fontSize: '24px', marginLeft: 'auto' }} />
+    <Link to="/login">
+    <UserOutlined style={{ fontSize: '24px', marginLeft: 'auto', color: "black" }} />
+    </Link>
 </Header>
 );
 
