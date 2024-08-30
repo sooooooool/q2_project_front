@@ -10,7 +10,7 @@ const CustomLayout: React.FC = () => (
         <Layout.Content style={{position:"relative"}}>
             <AppRoutes />
         </Layout.Content>
-        <Footer style={{position:"fixed", zIndex:1, width: '100%', bottom: 0, textAlign:'center'}}/>
+        {/* <Footer style={{position:"fixed", zIndex:1, width: '100%', bottom: 0, textAlign:'center'}}/> */}
     </Layout>
 );
 

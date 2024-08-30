@@ -1,14 +1,21 @@
+
 import React from 'react';
 import { Select } from 'antd';
 
 const { Option } = Select;
 
-const SelectComponent: React.FC = () => {
+interface SelectComponentProps {
+    options: { value: string; label: string }[];
+}
+
+const SelectComponent: React.FC<SelectComponentProps> = ({ options }) => {
     return (
-        <Select defaultValue="option1" style={{ width: 120 }}>
-            <Option value="option1">Option 1</Option>
-            <Option value="option2">Option 2</Option>
-            <Option value="option3">Option 3</Option>
+        <Select defaultValue={options[0].value} style={{ width: 120 }}>
+            {options.map((option) => (
+                <Option key={option.value} value={option.value}>
+                    {option.label}
+                </Option>
+            ))}
         </Select>
     );
 };

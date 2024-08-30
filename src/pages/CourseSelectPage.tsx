@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Row, Col, Rate, Dropdown, Menu, FloatButton, Input } from 'antd'
 import CourseCard from '../components/Course/Course'
 
 import * as I from '../assets/random'
-import { Link, useLocation } from 'react-router-dom';
 import { DownOutlined, PlusOutlined, SearchOutlined } from '@ant-design/icons';
 import Title from 'antd/es/skeleton/Title';
+import CustomLink from '../components/Common/Link';
 
 
 
@@ -135,9 +135,7 @@ const CourseSelectPage: React.FC = () => {
           ))}
         </Col>
       </Row>
-      <Link to="/course/create">
-        <FloatButton icon={<PlusOutlined />} type="primary" tooltip="Add somhing" />
-      </Link>
+      <CustomLink to="/course/create" icon={<FloatButton icon={<PlusOutlined />} type="primary" tooltip="Add something" />} />
     </>
   )
 }
