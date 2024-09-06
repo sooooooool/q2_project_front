@@ -1,8 +1,8 @@
-import React from 'react';
-import { BrowserRouter } from 'react-router-dom';
-import CustomLayout from './components/Layout/Layout';
+import React from "react";
+import { BrowserRouter } from "react-router-dom";
+import CustomLayout from "./components/Layout/Layout";
 
-import './App.css';
+import "./App.css";
 
 function App() {
   return (
