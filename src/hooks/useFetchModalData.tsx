@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import axios from 'axios';
-import * as T from '../types';
+import { useState } from "react";
+import axios from "axios";
+import * as T from "../types";
 
 const useFetchModalData = () => {
   const [data, setData] = useState<T.DataItem[]>([]);
@@ -12,7 +12,7 @@ const useFetchModalData = () => {
   const fetchData = async (page: number) => {
     setLoading(true);
     try {
-      const response = await axios.get('https://api-endpoint.com/spots', {
+      const response = await axios.get("https://api-endpoint.com/spots-api", {
         params: {
           page,
           pageSize,
@@ -21,7 +21,7 @@ const useFetchModalData = () => {
       setData(response.data.items);
       setTotal(response.data.total);
     } catch (error) {
-      console.error('Error fetching data:', error);
+      console.error("Error fetching data:", error);
     } finally {
       setLoading(false);
     }
