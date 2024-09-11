@@ -1,14 +1,11 @@
-import { useState } from "react";
+import { useContext } from "react";
+import AuthContext from "../context/AuthContext";
 
-const useAuth = () => {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  // Your authentication logic goes here
-
-  return {
-    isLoggedIn,
-    // Any other values or functions you want to expose
-  };
+// 컨텍스트를 사용하는 커스텀 훅
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error("useAuth must be used within an AuthProvider");
+  }
+  return context;
 };
-
-export default useAuth;

@@ -4,6 +4,7 @@ import { DownOutlined, SearchOutlined, PlusOutlined } from "@ant-design/icons";
 import CustomLink from "../components/Common/Link";
 import CourseCard from "../components/Course/Course";
 import * as I from "../assets/random";
+import { useAuth } from "../hooks/useAuth"; // 커스텀 훅으로 AuthContext 사용
 
 const pageSize = 5; // 한 페이지에 표시할 코스의 수
 
@@ -38,10 +39,9 @@ const getPaginatedCourses = (
 };
 
 const CourseSelectPage = () => {
+  const { user } = useAuth(); // AuthContext에서 로그인 상태를 가져옴
   const [sortOrder, setSortOrder] = useState("latest"); // 기본 정렬을 최신순으로 설정
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 상태 관리
-  const [isLoginModalVisible, setIsLoginModalVisible] = useState(false); // 로그인 모달 상태
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // 로그인 상태 관리
 
   // 더미 코스 데이터
   const courses = [
@@ -274,23 +274,26 @@ const CourseSelectPage = () => {
       </div>
 
       {/* 코스 생성 페이지로 이동하는 플로팅 버튼 */}
-      <CustomLink
-        to="/course/create"
-        icon={
-          <FloatButton
-            icon={<PlusOutlined />}
-            type="primary"
-            tooltip="Add something"
+      {
+        user ? (
+          <CustomLink
+            to="/course/create"
+            icon={
+              <FloatButton
+                icon={<PlusOutlined />}
+                type="primary"
+                tooltip="Create Course"
+                style={{ right: 24, bottom: 24 }}
+              />
+            }
           />
-        }
-      />
+        ) : null /* 로그인되지 않은 경우에는 버튼이 보이지 않음 */
+      }
     </>
   );
 };
 
 export default CourseSelectPage;
-
-// export default CourseSelectPage;
 
 // import React, { useState } from "react";
 // import { Row, Col, Dropdown, Menu, FloatButton, Input } from "antd";
