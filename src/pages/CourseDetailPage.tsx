@@ -25,22 +25,32 @@ const CourseRating: React.FC<{
   review: string;
   onReviewChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   onSubmit: () => void;
-}> = ({ rating, onRatingChange, review, onReviewChange, onSubmit }) => (
-  <div>
-    <h3>코스 평가</h3>
-    <Rate value={rating} onChange={onRatingChange} />
-    <Input
-      value={review}
-      onChange={onReviewChange} // 이벤트 객체를 받아 상태 업데이트
-      placeholder="댓글을 입력하세요"
-      maxLength={150}
-      style={{ marginTop: "10px", marginBottom: "10px" }}
-    />
-    <Button type="primary" onClick={onSubmit}>
-      제출
-    </Button>
-  </div>
-);
+}> = ({ rating, onRatingChange, review, onReviewChange, onSubmit }) => {
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      onSubmit(); // 엔터키로 제출
+    }
+  };
+
+  return (
+    <div>
+      <h3>코스 평가</h3>
+      <Rate value={rating} onChange={onRatingChange} />
+      <Input
+        value={review}
+        onChange={onReviewChange}
+        onKeyPress={handleKeyPress} // 엔터 키 입력 처리
+        placeholder="댓글을 입력하세요"
+        maxLength={150}
+        style={{ marginTop: "10px", marginBottom: "10px" }}
+      />
+      <Button type="primary" onClick={onSubmit}>
+        제출
+      </Button>
+    </div>
+  );
+};
 
 // 댓글 리스트 컴포넌트
 const CommentList: React.FC<{ comments: { text: string; date: string }[] }> = ({
@@ -192,7 +202,7 @@ const CourseDetailPage: React.FC = () => {
         rating={userRating}
         onRatingChange={setUserRating}
         review={userReview}
-        onReviewChange={handleReviewChange} // 이벤트 핸들러로 수정
+        onReviewChange={handleReviewChange}
         onSubmit={handleReviewSubmit}
       />
     </div>
