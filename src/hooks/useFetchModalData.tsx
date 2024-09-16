@@ -8,11 +8,12 @@ const useFetchModalData = () => {
   const [total, setTotal] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const pageSize = 10;
+  const apiEndpoint = process.env.REACT_APP_BACKEND_URL || "https://datepeek.link";
 
   const fetchData = async (page: number) => {
     setLoading(true);
     try {
-      const response = await axios.get("https://api-endpoint.com/spots-api", {
+      const response = await axios.get(`${apiEndpoint}/spot-api`, {
         params: {
           page,
           pageSize,

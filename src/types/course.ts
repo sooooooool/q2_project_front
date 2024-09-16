@@ -12,5 +12,29 @@ const course: Course = {
     credits: 3,
 };
 
+export interface CourseSummary {
+    id: number;
+    title: string;
+    userName: string;
+    tags: string[];
+    imageUrl: string;
+    time: number;
+    meanrating: number;
+}
+
+
+export interface CourseDetail {
+    id: number;
+    title: string;
+    userName: string;
+    tags: string[];
+    imageUrl: string;
+    time: number;
+    comments: number;
+    meanrating: number;
+    ratingCount: number;
+}
+
+
 
 export default Course;
