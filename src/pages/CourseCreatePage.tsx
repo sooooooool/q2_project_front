@@ -20,13 +20,14 @@ const CourseCreatePage: React.FC = () => {
   const { user } = useAuth();
   const { data, loading, total, currentPage, setCurrentPage, fetchData } =
     useFetchModalData();
-  const apiEndpoint = process.env.REACT_APP_BACKEND_URL || "https://datepeek.link";
+  const apiEndpoint =
+    process.env.REACT_APP_BACKEND_URL || "https://datepeek.link";
 
   useEffect(() => {
     if (isModalVisible) {
       fetchData();
     }
-  }, [isModalVisible, currentPage, fetchData]);
+  }, [isModalVisible, currentPage]);
 
   const showModal = (field: string) => {
     setModalField(field);
@@ -39,7 +40,7 @@ const CourseCreatePage: React.FC = () => {
         ...prev,
         [modalField]: value,
       }));
-      form.setFieldsValue({ [modalField]: value.name });
+      form.setFieldsValue({ [modalField]: value.Spot_Name });
     }
     setIsModalVisible(false);
   };
@@ -62,10 +63,8 @@ const CourseCreatePage: React.FC = () => {
         F_User_id: user?.id,
         Course_title: values.title,
         Course_content: values.content,
-        F_Course_Location: 1,// 우선 성수로 저장할거라 1로 고정
-        spots: Object.keys(selectedSpots).map(
-          (key) => selectedSpots[key].id
-        ),
+        F_Course_Location: 1, // 우선 성수로 저장할거라 1로 고정
+        spots: Object.keys(selectedSpots).map((key) => selectedSpots[key].id),
       });
 
       const courseId = courseResponse.data.id;

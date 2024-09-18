@@ -9,7 +9,8 @@ const useFetchModalData = () => {
   const [total, setTotal] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const pageSize = 10;
-  const apiEndpoint = process.env.REACT_APP_BACKEND_URL || "https://datepeek.link";
+  const apiEndpoint =
+    process.env.REACT_APP_BACKEND_URL || "https://datepeek.link";
 
   const fetchData = async () => {
     setLoading(true);
@@ -25,9 +26,16 @@ const useFetchModalData = () => {
       const response = await axios.get(`${apiEndpoint}/spot-api`, {
         params: { data: encodedData }, // 쿼리 스트링으로 인코딩된 데이터 전달
       });
-
-      setData(response.data.items);
-      setTotal(response.data.total);
+      const { spots, total } = response.data;
+      console.log(`spots: ${spots},\n total: ${total}`);
+      setData(
+        spots.map((spot: T.SpotDetail) => ({
+          id: spot.id,
+          Spot_Name: spot.Spot_Name,
+        }))
+      );
+      console.log(`data: ${data}`);
+      setTotal(total);
     } catch (error) {
       console.error("Error fetching data:", error);
     } finally {
