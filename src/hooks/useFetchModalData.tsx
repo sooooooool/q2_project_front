@@ -1,6 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 import * as T from "../types";
+import { encode2queryData } from "../services/encode"; // 인코딩 함수 불러오기
 
 const useFetchModalData = () => {
   const [data, setData] = useState<T.DataItem[]>([]);
@@ -10,15 +11,21 @@ const useFetchModalData = () => {
   const pageSize = 10;
   const apiEndpoint = process.env.REACT_APP_BACKEND_URL || "https://datepeek.link";
 
-  const fetchData = async (page: number) => {
+  const fetchData = async () => {
     setLoading(true);
+
+    // 쿼리 데이터 인코딩
+    const encodedData = encode2queryData({
+      page: currentPage,
+      pageSize,
+    });
+
     try {
+      // 인코딩된 데이터 전송
       const response = await axios.get(`${apiEndpoint}/spot-api`, {
-        params: {
-          page,
-          pageSize,
-        },
+        params: { data: encodedData }, // 쿼리 스트링으로 인코딩된 데이터 전달
       });
+
       setData(response.data.items);
       setTotal(response.data.total);
     } catch (error) {

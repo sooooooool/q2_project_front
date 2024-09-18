@@ -24,7 +24,7 @@ const CourseCreatePage: React.FC = () => {
 
   useEffect(() => {
     if (isModalVisible) {
-      fetchData(currentPage);
+      fetchData();
     }
   }, [isModalVisible, currentPage, fetchData]);
 
