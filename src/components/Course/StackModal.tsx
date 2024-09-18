@@ -17,7 +17,7 @@ const StackModal: React.FC<T.StackModalProps> = ({ visible, loading, data, total
         renderItem={(item) => (
           <List.Item>
             <Button block onClick={() => onSelect(item)}>
-              {item.name}
+              {item.Spot_Name}
             </Button>
           </List.Item>
         )}
