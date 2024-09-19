@@ -10,6 +10,7 @@ import checkSessionAPI from "../utils/checkiSessionAPI";
 import { Nullable } from "../@types/global";
 
 interface User {
+  id: number;
   email: string;
   nick: string;
 }

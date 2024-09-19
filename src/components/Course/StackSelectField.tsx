@@ -22,12 +22,12 @@ const StackSelectField: React.FC<{
   >
     <Select
       placeholder={
-        selectedSpot ? selectedSpot.name : "다녀온 핫플을 선택하세요.."
+        selectedSpot ? selectedSpot.Spot_Name : "다녀온 핫플을 선택하세요.."
       }
       onClick={showModal}
       open={false}
     >
-      <Option value="">{selectedSpot ? selectedSpot.name : "선택하기"}</Option>
+      <Option value="">{selectedSpot ? selectedSpot.Spot_Name : "선택하기"}</Option>
     </Select>
   </Form.Item>
 );

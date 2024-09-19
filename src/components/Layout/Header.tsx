@@ -23,7 +23,7 @@ const CustomHeader: React.FC = () => {
   };
 
   // 로그인 처리
-  const handleLogin = (userData: { email: string; nick: string }) => {
+  const handleLogin = (userData: { id:number , email: string; nick: string }) => {
     login(userData); // 로그인 함수 호출
     setIsLoginModalVisible(false); // 로그인 후 모달 닫기
   };

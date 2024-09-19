@@ -1,6 +1,6 @@
 export interface DataItem {
   id: number;
-  name: string;
+  Spot_Name: string;
 }
 
 export interface StackModalProps {
@@ -12,4 +12,12 @@ export interface StackModalProps {
   onPageChange: (page: number) => void;
   onCancel: () => void;
   onSelect: (value: DataItem) => void;
+}
+
+export interface SpotDetail {
+  id: number;
+  Spot_Name: string;
+  Lat: number;
+  Lng: number;
+  F_Spot_Location: number;
 }
