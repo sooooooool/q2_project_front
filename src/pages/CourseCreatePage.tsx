@@ -7,6 +7,8 @@ import StackSelectField from "../components/Course/StackSelectField";
 import useFetchModalData from "../hooks/useFetchModalData";
 import * as T from "../types";
 import { useAuth } from "../context/AuthContext";
+import { Link } from "react-router-dom";
+import CloseIcon from "../assets/images/Icon.svg";
 
 const { TextArea } = Input;
 
@@ -89,68 +91,95 @@ const CourseCreatePage: React.FC = () => {
   };
 
   return (
-    <Form
-      form={form}
-      layout="vertical"
-      onFinish={handleSubmit}
-      style={{ maxWidth: "400px", margin: "0 auto" }}
+    <div
+      style={{
+        marginTop: "40px",
+        position: "relative",
+        padding: "16px",
+      }}
     >
-      <Form.Item name="upload" label="사진/이미지" valuePropName="fileList">
-        <Upload
-          listType="picture-card"
-          beforeUpload={(file) => {
-            const isValidSize = file.size / 1024 / 1024 < 2; // Limit to 2MB
-            if (!isValidSize) {
-              message.error("파일 크기는 2MB를 초과할 수 없습니다.");
-            }
-            return isValidSize;
+      {/* 닫기 버튼 */}
+      <Link to="/course">
+        <span
+          style={{
+            position: "absolute",
+            right: 10,
+            top: 10,
+            cursor: "pointer",
+            zIndex: 1000,
           }}
         >
-          <div>
-            <UploadOutlined />
-            <div style={{ marginTop: 8 }}>Upload</div>
-          </div>
-        </Upload>
-      </Form.Item>
-
-      <Form.Item
-        name="title"
-        label="제목"
-        rules={[{ required: true, message: "제목을 입력하세요." }]}
+          <img
+            src={CloseIcon}
+            alt="닫기"
+            style={{ width: "16px", height: "16px" }}
+            aria-label="닫기 버튼" // 접근성 향상
+          />
+        </span>
+      </Link>
+      <Form
+        form={form}
+        layout="vertical"
+        onFinish={handleSubmit}
+        style={{ maxWidth: "400px", margin: "0 auto" }}
       >
-        <Input placeholder="제목을 입력하세요." />
-      </Form.Item>
+        <Form.Item name="upload" label="사진/이미지" valuePropName="fileList">
+          <Upload
+            listType="picture-card"
+            beforeUpload={(file) => {
+              const isValidSize = file.size / 1024 / 1024 < 2; // Limit to 2MB
+              if (!isValidSize) {
+                message.error("파일 크기는 2MB를 초과할 수 없습니다.");
+              }
+              return isValidSize;
+            }}
+          >
+            <div>
+              <UploadOutlined />
+              <div style={{ marginTop: 8 }}>Upload</div>
+            </div>
+          </Upload>
+        </Form.Item>
 
-      {Array.from({ length: 4 }).map((_, index) => (
-        <StackSelectField
-          key={index}
-          index={index}
-          showModal={() => showModal(`stack-${index}`)}
-          selectedSpot={selectedSpots[`stack-${index}`]}
+        <Form.Item
+          name="title"
+          label="제목"
+          rules={[{ required: true, message: "제목을 입력하세요." }]}
+        >
+          <Input placeholder="제목을 입력하세요." />
+        </Form.Item>
+
+        {Array.from({ length: 4 }).map((_, index) => (
+          <StackSelectField
+            key={index}
+            index={index}
+            showModal={() => showModal(`stack-${index}`)}
+            selectedSpot={selectedSpots[`stack-${index}`]}
+          />
+        ))}
+
+        <Form.Item name="content" label="내용">
+          <TextArea rows={4} placeholder="이런 데이터는 어떠냐요?" />
+        </Form.Item>
+
+        <Form.Item>
+          <Button type="primary" htmlType="submit" block>
+            등록하기
+          </Button>
+        </Form.Item>
+
+        <StackModal
+          visible={isModalVisible}
+          loading={loading}
+          data={data}
+          total={total}
+          currentPage={currentPage}
+          onPageChange={setCurrentPage}
+          onCancel={handleCancel}
+          onSelect={handleOk}
         />
-      ))}
-
-      <Form.Item name="content" label="내용">
-        <TextArea rows={4} placeholder="이런 데이터는 어떠냐요?" />
-      </Form.Item>
-
-      <Form.Item>
-        <Button type="primary" htmlType="submit" block>
-          등록하기
-        </Button>
-      </Form.Item>
-
-      <StackModal
-        visible={isModalVisible}
-        loading={loading}
-        data={data}
-        total={total}
-        currentPage={currentPage}
-        onPageChange={setCurrentPage}
-        onCancel={handleCancel}
-        onSelect={handleOk}
-      />
-    </Form>
+      </Form>
+    </div>
   );
 };
 

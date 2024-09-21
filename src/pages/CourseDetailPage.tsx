@@ -43,9 +43,13 @@ const CourseRating: React.FC<{
         onKeyPress={handleKeyPress} // 엔터 키 입력 처리
         placeholder="댓글을 입력하세요"
         maxLength={150}
-        style={{ marginTop: "10px", marginBottom: "10px" }}
+        style={{ marginTop: "10px", marginBottom: "15px" }}
       />
-      <Button type="primary" onClick={onSubmit}>
+      <Button
+        type="primary"
+        onClick={onSubmit}
+        style={{ marginBottom: "30px" }}
+      >
         제출
       </Button>
     </div>
@@ -137,7 +141,13 @@ const CourseDetailPage: React.FC = () => {
   if (loading) return <div>Loading...</div>; // 로딩 중일 때 로딩 표시
 
   return (
-    <div style={{ padding: "16px", position: "relative" }}>
+    <div
+      style={{
+        padding: "16px",
+        position: "relative",
+        marginTop: "40px",
+      }}
+    >
       {/* 닫기 버튼 */}
       <Link to="/course">
         <span
@@ -153,6 +163,7 @@ const CourseDetailPage: React.FC = () => {
             src={CloseIcon}
             alt="닫기"
             style={{ width: "16px", height: "16px" }}
+            aria-label="닫기 버튼"
           />
         </span>
       </Link>

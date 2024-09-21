@@ -187,12 +187,12 @@ const CourseSelectPage = () => {
           display: "flex",
           flexDirection: "column",
           alignItems: "center",
-          padding: "16px",
           position: "relative",
+          fontSize: "17px",
+          fontWeight: "bold",
         }}
       >
-        <div style={{ fontSize: "24px", fontWeight: "bold" }}>성수</div>
-        <div style={{ position: "absolute", right: 0, top: "40px" }}>
+        <div style={{ position: "absolute", right: 0, padding: "0px 50px" }}>
           <Dropdown menu={{ items: menuItems, onClick: handleMenuClick }}>
             <a onClick={(e) => e.preventDefault()} style={{ color: "black" }}>
               {sortOrder === "latest" ? "최신순" : "평점순"} <DownOutlined />
@@ -204,10 +204,12 @@ const CourseSelectPage = () => {
       {/* 검색 인풋 필드 */}
       <div
         style={{
-          padding: "12px 16px",
+          padding: "12px 30px",
           display: "flex",
           flexDirection: "column",
           alignItems: "flex-start",
+          marginTop: "30px",
+          marginBottom: "20px",
         }}
       >
         <Input
@@ -216,14 +218,25 @@ const CourseSelectPage = () => {
           maxLength={40}
           style={{
             backgroundColor: "#f5f5f5",
-            padding: "8px 16px",
+            padding: "8px 30px",
             borderRadius: "12px",
+            border: "none",
+            outline: "none",
+            height: "50px",
+            fontSize: "14px",
           }}
         />
       </div>
 
       {/* 코스 리스트 */}
-      <Row justify="center" style={{ width: "100%" }}>
+      <Row
+        justify="center"
+        style={{
+          width: "100%",
+          display: "flex",
+          justifyContent: "center",
+        }}
+      >
         <Col xs={24} sm={22}>
           {/* 페이지네이션 된 코스 카드들을 화면에 표시 */}
           {paginatedCourses.map(
@@ -239,23 +252,32 @@ const CourseSelectPage = () => {
               meanrating: number;
               ratingCount: number;
             }) => (
-              <CustomLink
+              <div
                 key={course.id}
-                to={`/course/${course.id}`}
-                icon={
-                  <CourseCard
-                    title={course.title}
-                    userName={course.userName}
-                    tags={course.tags}
-                    imageUrl={course.imageUrl}
-                    time={course.time}
-                    comments={course.comments}
-                    likes={course.likes}
-                    meanrating={course.meanrating}
-                    ratingCount={course.ratingCount}
-                  />
-                }
-              />
+                style={{
+                  padding: "0px 20px",
+                  justifyContent: "center",
+                  marginBottom: "20px",
+                }}
+              >
+                <CustomLink
+                  to={`/course/${course.id}`}
+                  style={{ boxShadow: "none" }}
+                  icon={
+                    <CourseCard
+                      title={course.title}
+                      userName={course.userName}
+                      tags={course.tags}
+                      imageUrl={course.imageUrl}
+                      time={course.time}
+                      comments={course.comments}
+                      likes={course.likes}
+                      meanrating={course.meanrating}
+                      ratingCount={course.ratingCount}
+                    />
+                  }
+                />
+              </div>
             )
           )}
         </Col>
@@ -263,7 +285,12 @@ const CourseSelectPage = () => {
 
       {/* 페이지네이션 */}
       <div
-        style={{ display: "flex", justifyContent: "center", marginTop: "16px" }}
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          marginTop: "16px",
+          marginBottom: "40px",
+        }}
       >
         <Pagination
           current={currentPage}

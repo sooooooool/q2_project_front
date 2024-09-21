@@ -1,11 +1,14 @@
-import React from "react";
+import React, { useRef } from "react";
 import "../App.css"; // 스타일 파일 import
-import { Card, Carousel, Layout } from "antd";
+import { Carousel, Layout } from "antd";
+import { CarouselRef } from "antd/es/carousel";
 import Title from "antd/es/typography/Title";
 import LocationCard from "../components/Location/LocationCard";
 import * as I from "../assets/random/image";
 import { ReactComponent as Mylogo } from "../assets/images/mylogo.svg";
 import { ReactComponent as Mytextlogo } from "../assets/images/mytextlogo.svg";
+import RightArrowIcon from "../assets/images/RightArrowIcon.png";
+import LeftArrowIcon from "../assets/images/LeftArrowIcon.png";
 
 const LocationContainer: React.FC = () => {
   const locations = [
@@ -36,25 +39,37 @@ const LocationContainer: React.FC = () => {
     },
   ];
 
+  // Carousel 레퍼런스를 위한 Ref 생성
+  const carouselRef = useRef<CarouselRef | null>(null);
+
+  // 화살표 클릭 이벤트 핸들러
+  const handlePrevClick = () => {
+    carouselRef.current?.prev();
+  };
+
+  const handleNextClick = () => {
+    carouselRef.current?.next();
+  };
+
   return (
     <>
       <Layout
         style={{
           position: "relative",
-          top: "10px",
+          top: "150px",
           width: "100%",
           justifyContent: "center",
           alignItems: "center",
           backgroundColor: "transparent",
         }}
       >
-        <Mylogo style={{ width: "100%", height: "160px" }} />
+        <Mylogo style={{ width: "90%", height: "100px" }} />
       </Layout>
 
       <Layout
         style={{
           position: "relative",
-          top: "0px",
+          top: "150px",
           width: "100%",
           justifyContent: "center",
           alignItems: "center",
@@ -68,7 +83,7 @@ const LocationContainer: React.FC = () => {
       <Layout
         style={{
           position: "relative",
-          top: "0px",
+          top: "150px",
           display: "flex",
           width: "100%",
           padding: "17px 42px",
@@ -79,7 +94,7 @@ const LocationContainer: React.FC = () => {
       >
         <Title
           style={{
-            fontSize: "24px",
+            fontSize: "30px",
             fontWeight: "700",
             letterSpacing: "-0.48px",
             color: "#ff6f0f",
@@ -89,22 +104,68 @@ const LocationContainer: React.FC = () => {
         </Title>
       </Layout>
 
-      <Carousel
-        autoplay
-        vertical
-        autoplaySpeed={5000}
-        arrows={true}
-        style={{ position: "relative", top: "0px", height: "160px" }}
+      <div
+        style={{
+          position: "relative",
+          top: "150px",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
       >
-        {locations.map((location, index) => (
-          <LocationCard
-            key={index}
-            imageUrl={location.imageUrl}
-            locationName={location.locationName}
-            linkUrl={location.linkUrl}
-          />
-        ))}
-      </Carousel>
+        {/* 왼쪽 화살표 */}
+        <img
+          src={LeftArrowIcon}
+          alt="left-arrow"
+          style={{
+            color: "#000",
+            position: "absolute",
+            top: "50%",
+            left: "80px",
+            zIndex: 2,
+            cursor: "pointer",
+            width: "24px",
+            height: "24px",
+          }}
+          onClick={handlePrevClick}
+        />
+        {/* 캐러셀 */}
+        <Carousel
+          ref={carouselRef} // Carousel에 Ref 연결, 타입 명시됨
+          autoplay
+          autoplaySpeed={5000}
+          dots={false}
+          style={{ height: "150px" }}
+        >
+          {locations.map((location, index) => (
+            <LocationCard
+              key={index}
+              imageUrl={location.imageUrl}
+              locationName={location.locationName}
+              linkUrl={location.linkUrl}
+              cardstyle={{
+                boxShadow: "none", // 하단 그림자 제거
+              }}
+            />
+          ))}
+        </Carousel>
+
+        {/* 오른쪽 화살표 */}
+        <img
+          src={RightArrowIcon} // 주어진 아이콘 사용
+          alt="right-arrow"
+          style={{
+            color: "#000",
+            position: "absolute",
+            top: "50%",
+            right: "80px",
+            zIndex: 2,
+            cursor: "pointer",
+            width: "24px",
+            height: "24px",
+          }}
+          onClick={handleNextClick} // 다음 슬라이드로 이동
+        />
+      </div>
     </>
   );
 };
