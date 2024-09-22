@@ -43,13 +43,13 @@ const CourseRating: React.FC<{
         onKeyPress={handleKeyPress} // 엔터 키 입력 처리
         placeholder="댓글을 입력하세요"
         maxLength={150}
-        style={{ marginTop: "10px", marginBottom: "15px" }}
+        style={{
+          marginTop: "10px",
+          marginBottom: "15px",
+          borderRadius: "10px",
+        }}
       />
-      <Button
-        type="primary"
-        onClick={onSubmit}
-        style={{ marginBottom: "30px" }}
-      >
+      <Button type="primary" onClick={onSubmit} style={{ margin: "0 450px" }}>
         제출
       </Button>
     </div>
@@ -169,7 +169,9 @@ const CourseDetailPage: React.FC = () => {
       </Link>
 
       {/* 코스 이미지 */}
-      <CourseImage imageUrl={course?.imageUrl} />
+      <div style={{ borderRadius: "15px" }}>
+        <CourseImage imageUrl={course?.imageUrl} />
+      </div>
 
       {/* 코스 제목 및 별점 */}
       <div
@@ -181,7 +183,8 @@ const CourseDetailPage: React.FC = () => {
       >
         <div>
           <h1 style={{ fontSize: "24px", fontWeight: "bold", margin: 0 }}>
-            {course?.title.slice(0, 12)} ({course?.ratingCount}){/* 제목 */}
+            {course?.title.slice(0, 12)}{" "}
+            {course?.ratingCount ? `(${course.ratingCount})` : ""} {/* 제목 */}
           </h1>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
@@ -201,7 +204,12 @@ const CourseDetailPage: React.FC = () => {
         <img
           src={ExampleImage}
           alt="Course Route"
-          style={{ width: "100%", height: "300px", objectFit: "cover" }}
+          style={{
+            width: "100%",
+            height: "300px",
+            objectFit: "cover",
+            borderRadius: "10px",
+          }}
         />
       </div>
 
