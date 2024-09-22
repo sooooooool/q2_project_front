@@ -4,7 +4,7 @@ import { HomeOutlined, LoginOutlined } from "@ant-design/icons";
 import LoginModal from "../Common/LoginModal";
 import CustomLink from "../Common/Link";
 import { useAuth } from "../../context/AuthContext";
-import UserDropdown from "../../components/Mypage/UserDropdown"; // UserDropdown 컴포넌트 가져오기
+import UserDropdown from "../MyPage/UserDropdown"; // UserDropdown 컴포넌트 가져오기
 
 const { Header } = Layout;
 
