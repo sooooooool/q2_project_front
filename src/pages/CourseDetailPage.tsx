@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Button, Rate, Input, List } from "antd";
+import { Button, Rate, Input, List, Row, Col } from "antd";
 import { StarFilled } from "@ant-design/icons";
 import * as I from "../assets/random";
 import ExampleImage from "../assets/images/ExampleImage.png";
 import CloseIcon from "../assets/images/Icon.svg";
+import HotPlaceIcon1 from "../assets/images/HotPlaceIcon1.svg";
+import HotPlaceIcon2 from "../assets/images/HotPlaceIcon2.svg";
+import HotPlaceIcon3 from "../assets/images/HotPlaceIcon3.svg";
+import HotPlaceIcon4 from "../assets/images/HotPlaceIcon4.svg";
+import SubmitIcon from "../assets/images/SubmitIcon.svg";
 
 // 코스 정보 타입 정의
 type CourseDetail = {
@@ -18,36 +23,46 @@ type CourseDetail = {
   comments: { text: string; date: string }[];
 };
 
-// 코스 평가 컴포넌트
-const CourseRating: React.FC<{
-  rating: number;
-  onRatingChange: (value: number) => void;
-  review: string;
-  onReviewChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  onSubmit: () => void;
-}> = ({ rating, onRatingChange, review, onReviewChange, onSubmit }) => {
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      e.preventDefault();
-      onSubmit(); // 엔터키로 제출
-    }
-  };
+// 핫플레이스 컴포넌트
+const HotPlaceList: React.FC = () => {
+  const hotPlaces = [
+    { id: 1, name: "동구식당", icon: HotPlaceIcon1 },
+    { id: 2, name: "소적두 성수점", icon: HotPlaceIcon2 },
+    { id: 3, name: "디올 성수", icon: HotPlaceIcon3 },
+    { id: 4, name: "스케줄 성수", icon: HotPlaceIcon4 },
+  ];
+
+  const displayedHotPlaces = hotPlaces.slice(0, 4); // 4개까지 표시
 
   return (
     <div>
-      <h3>코스 평가</h3>
-      <Rate value={rating} onChange={onRatingChange} />
-      <Input
-        value={review}
-        onChange={onReviewChange}
-        onKeyPress={handleKeyPress} // 엔터 키 입력 처리
-        placeholder="댓글을 입력하세요"
-        maxLength={150}
-        style={{ marginTop: "10px", marginBottom: "10px" }}
-      />
-      <Button type="primary" onClick={onSubmit}>
-        제출
-      </Button>
+      <Row gutter={[16, 16]}>
+        {displayedHotPlaces.map((place) => (
+          <Col span={24} key={place.id}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                alignSelf: "stretch",
+                padding: "16px",
+                gap: "12px",
+                backgroundColor: "#f7f7f7",
+                borderRadius: "10px",
+                border: "1px solid #e0e0e0",
+              }}
+            >
+              <img
+                src={place.icon}
+                alt={`icon-${place.id}`}
+                style={{ width: "24px", height: "24px", marginRight: "10px" }}
+              />
+              <span style={{ fontSize: "16px", fontWeight: "bold" }}>
+                {place.name}
+              </span>
+            </div>
+          </Col>
+        ))}
+      </Row>
     </div>
   );
 };
@@ -82,6 +97,81 @@ const CommentList: React.FC<{ comments: { text: string; date: string }[] }> = ({
     )}
   </div>
 );
+
+// 코스 평가 컴포넌트
+const CourseRating: React.FC<{
+  rating: number;
+  onRatingChange: (value: number) => void;
+  review: string;
+  onReviewChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onSubmit: () => void;
+}> = ({ rating, onRatingChange, review, onReviewChange, onSubmit }) => {
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      onSubmit(); // 엔터키로 제출
+    }
+  };
+
+  return (
+    <div
+      style={{
+        padding: "16px",
+        backgroundColor: "#f7f7f7", // 박스 형태를 위한 배경색
+        borderRadius: "10px", // 박스 형태의 둥근 테두리
+        border: "1px solid #e0e0e0", // 박스 테두리
+        display: "flex",
+        flexDirection: "column",
+        gap: "16px",
+        marginTop: "15px",
+      }}
+    >
+      {/* 코스 평가 제목 */}
+      <h3 style={{ margin: 0 }}>코스 평가</h3>
+
+      {/* 별점 평가 */}
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <Rate value={rating} onChange={onRatingChange} />
+      </div>
+
+      {/* 댓글 작성 및 제출 섹션 */}
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          marginBottom: "10px",
+        }}
+      >
+        {/* 댓글 입력 필드 */}
+        <Input
+          value={review}
+          onChange={onReviewChange}
+          onKeyPress={handleKeyPress} // 엔터 키 입력 처리
+          placeholder="댓글을 입력하세요"
+          maxLength={150}
+          style={{
+            flex: 1, // 입력 필드가 가능한 넓게 차지하게 설정
+            borderRadius: "10px",
+            marginRight: "10px",
+            border: "1px solid #e0e0e0",
+          }}
+        />
+        {/* SVG 제출 버튼 */}
+        <img
+          src={SubmitIcon} // 제출 아이콘 (SVG)
+          alt="제출"
+          onClick={onSubmit} // 클릭하면 제출 함수 호출
+          style={{
+            width: "32px", // 아이콘 크기
+            height: "32px",
+            cursor: "pointer", // 마우스 커서가 버튼처럼 보이도록 설정
+          }}
+        />
+      </div>
+    </div>
+  );
+};
 
 // 코스 이미지 컴포넌트
 const CourseImage: React.FC<{ imageUrl?: string }> = ({ imageUrl }) => (
@@ -137,7 +227,13 @@ const CourseDetailPage: React.FC = () => {
   if (loading) return <div>Loading...</div>; // 로딩 중일 때 로딩 표시
 
   return (
-    <div style={{ padding: "16px", position: "relative" }}>
+    <div
+      style={{
+        padding: "16px",
+        position: "relative",
+        marginTop: "40px",
+      }}
+    >
       {/* 닫기 버튼 */}
       <Link to="/course">
         <span
@@ -153,12 +249,15 @@ const CourseDetailPage: React.FC = () => {
             src={CloseIcon}
             alt="닫기"
             style={{ width: "16px", height: "16px" }}
+            aria-label="닫기 버튼"
           />
         </span>
       </Link>
 
       {/* 코스 이미지 */}
-      <CourseImage imageUrl={course?.imageUrl} />
+      <div style={{ borderRadius: "15px" }}>
+        <CourseImage imageUrl={course?.imageUrl} />
+      </div>
 
       {/* 코스 제목 및 별점 */}
       <div
@@ -170,7 +269,8 @@ const CourseDetailPage: React.FC = () => {
       >
         <div>
           <h1 style={{ fontSize: "24px", fontWeight: "bold", margin: 0 }}>
-            {course?.title.slice(0, 12)} ({course?.ratingCount}){/* 제목 */}
+            {course?.title.slice(0, 12)}{" "}
+            {course?.ratingCount ? `(${course.ratingCount})` : ""} {/* 제목 */}
           </h1>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
@@ -178,6 +278,11 @@ const CourseDetailPage: React.FC = () => {
             {course?.meanRating.toFixed(1)} <StarFilled />
           </span>
         </div>
+      </div>
+
+      {/* 핫플레이스 섹션 */}
+      <div style={{ margin: "20px 0" }}>
+        <HotPlaceList />
       </div>
 
       {/* 코스 경로 이미지 */}
@@ -190,7 +295,12 @@ const CourseDetailPage: React.FC = () => {
         <img
           src={ExampleImage}
           alt="Course Route"
-          style={{ width: "100%", height: "300px", objectFit: "cover" }}
+          style={{
+            width: "100%",
+            height: "300px",
+            objectFit: "cover",
+            borderRadius: "10px",
+          }}
         />
       </div>
 
