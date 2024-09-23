@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import { Card as AntCard, Avatar, Tag, Space, Rate, Typography, Divider } from "antd"
 import { StarFilled } from "@ant-design/icons"
+import { CourseSummary } from "../../types"
 
 const { Text } = Typography
 
@@ -16,7 +17,7 @@ interface CardProps {
   ratingCount: number
 }
 
-const CourseCard: React.FC<CardProps> = ({ title, userName, tags, imageUrl, time, comments, likes, meanrating, ratingCount }) => {
+const CourseCard: React.FC<CourseSummary> = ({ id, title, userName, tags, imageUrl, meanrating }) => {
 
 
   return (

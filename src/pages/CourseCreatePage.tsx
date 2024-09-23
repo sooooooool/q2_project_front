@@ -14,16 +14,24 @@ const { TextArea } = Input;
 
 const CourseCreatePage: React.FC = () => {
   const [form] = Form.useForm();
+  const [fileList, setFileList] = useState<any[]>([]);
   const [isModalVisible, setIsModalVisible] = useState(false);
   const [modalField, setModalField] = useState<string | null>(null);
   const [selectedSpots, setSelectedSpots] = useState<{
     [key: string]: T.DataItem;
   }>({});
   const { user } = useAuth();
-  const { data, loading, total, currentPage, setCurrentPage, fetchData } =
-    useFetchModalData();
+  const {
+    data,
+    loading,
+    error, // 수정된 부분: error 추가
+    total,
+    currentPage,
+    setCurrentPage,
+    fetchData,
+  } = useFetchModalData();
   const apiEndpoint =
-    process.env.REACT_APP_BACKEND_URL || "https://datepeek.link";
+    process.env.REACT_APP_BACKEND_URL || "http://localhost:3001";
 
   useEffect(() => {
     if (isModalVisible) {
@@ -59,7 +67,9 @@ const CourseCreatePage: React.FC = () => {
       }
 
       const formData = new FormData();
-      formData.append("image", values.upload[0].originFileObj);
+      fileList.forEach((file) => {
+        formData.append('files', file.originFileObj);
+      });
 
       const courseResponse = await axios.post(`${apiEndpoint}/course-api`, {
         F_User_id: user?.id,
@@ -84,10 +94,19 @@ const CourseCreatePage: React.FC = () => {
       message.success("Form submitted successfully!");
       form.resetFields();
       setSelectedSpots({});
+      setFileList([]);
     } catch (error) {
       console.error("Error submitting form:", error);
       message.error("Failed to submit the form.");
     }
+  };
+
+  const normFile = (e: { fileList: any }) => {
+    console.log('Upload event:', e);
+    if (Array.isArray(e)) {
+      return e;
+    }
+    return e && e.fileList;
   };
 
   return (
@@ -123,21 +142,32 @@ const CourseCreatePage: React.FC = () => {
         onFinish={handleSubmit}
         style={{ maxWidth: "400px", margin: "0 auto" }}
       >
-        <Form.Item name="upload" label="사진/이미지" valuePropName="fileList">
-          <Upload
-            listType="picture-card"
-            beforeUpload={(file) => {
-              const isValidSize = file.size / 1024 / 1024 < 2; // Limit to 2MB
-              if (!isValidSize) {
-                message.error("파일 크기는 2MB를 초과할 수 없습니다.");
-              }
-              return isValidSize;
-            }}
-          >
+      {/* 이전 변경사항 유지 */}
+      <Form.Item
+        name="upload"
+        label="사진/이미지"
+        valuePropName="fileList"
+        getValueFromEvent={normFile}
+      >
+        <Upload
+          listType="picture-card"
+          fileList={fileList}
+          onChange={({ fileList }) => setFileList(fileList)}
+          beforeUpload={(file) => {
+            const isValidSize = file.size / 1024 / 1024 < 2; // Limit to 2MB
+            if (!isValidSize) {
+              message.error("파일 크기는 2MB를 초과할 수 없습니다.");
+            }
+            return isValidSize || Upload.LIST_IGNORE;
+          }}
+          multiple={true}
+        >
+          {fileList.length >= 8 ? null : (
             <div>
               <UploadOutlined />
               <div style={{ marginTop: 8 }}>Upload</div>
             </div>
+          )}
           </Upload>
         </Form.Item>
 
@@ -177,6 +207,7 @@ const CourseCreatePage: React.FC = () => {
           onPageChange={setCurrentPage}
           onCancel={handleCancel}
           onSelect={handleOk}
+          error={error} // 수정된 부분: error prop 추가
         />
       </Form>
     </div>

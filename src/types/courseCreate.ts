@@ -12,6 +12,7 @@ export interface StackModalProps {
   onPageChange: (page: number) => void;
   onCancel: () => void;
   onSelect: (value: DataItem) => void;
+  error: boolean;
 }
 
 export interface SpotDetail {

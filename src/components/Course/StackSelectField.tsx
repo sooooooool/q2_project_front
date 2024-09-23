@@ -1,8 +1,6 @@
 import React from "react";
-import { Form, Select } from "antd";
+import { Form, Input } from "antd";
 import * as T from "../../types";
-
-const { Option } = Select;
 
 const StackSelectField: React.FC<{
   index: number;
@@ -20,15 +18,13 @@ const StackSelectField: React.FC<{
       },
     ]}
   >
-    <Select
-      placeholder={
-        selectedSpot ? selectedSpot.Spot_Name : "다녀온 핫플을 선택하세요.."
-      }
+    <Input
+      placeholder="다녀온 핫플을 선택하세요."
+      value={selectedSpot ? selectedSpot.Spot_Name : ""}
       onClick={showModal}
-      open={false}
-    >
-      <Option value="">{selectedSpot ? selectedSpot.Spot_Name : "선택하기"}</Option>
-    </Select>
+      readOnly
+    />
+
   </Form.Item>
 );
 

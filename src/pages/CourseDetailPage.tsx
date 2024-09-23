@@ -10,6 +10,7 @@ import HotPlaceIcon2 from "../assets/images/HotPlaceIcon2.svg";
 import HotPlaceIcon3 from "../assets/images/HotPlaceIcon3.svg";
 import HotPlaceIcon4 from "../assets/images/HotPlaceIcon4.svg";
 import SubmitIcon from "../assets/images/SubmitIcon.svg";
+import axios from "axios";
 
 // 코스 정보 타입 정의
 type CourseDetail = {
@@ -197,17 +198,19 @@ const CourseDetailPage: React.FC = () => {
 
   // 백엔드에서 데이터 가져오기
   useEffect(() => {
-    fetch(`/api/courses/${courseId}`)
-      .then((response) => response.json())
-      .then((data) => {
-        setCourse(data);
-        setComments(data.comments);
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(`/course-api/:${courseId}`);
+        setCourse(response.data);
+        setComments(response.data.comments);
         setLoading(false);
-      })
-      .catch((error) => {
+      } catch (error) {
         console.error("Error fetching course data:", error);
         setLoading(false);
-      });
+      }
+    };
+
+    fetchData();
   }, [courseId]);
 
   const handleReviewSubmit = () => {

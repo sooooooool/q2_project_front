@@ -18,7 +18,6 @@ export interface CourseSummary {
     userName: string;
     tags: string[];
     imageUrl: string;
-    time: number;
     meanrating: number;
 }
 
