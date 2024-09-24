@@ -20,7 +20,7 @@ const StackSelectField: React.FC<{
   >
     <Input
       placeholder="다녀온 핫플을 선택하세요."
-      value={selectedSpot ? selectedSpot.Spot_Name : ""}
+      // value={selectedSpot ? selectedSpot.Spot_Name : ""}
       onClick={showModal}
       style={{
         backgroundColor: "#f7f7f7",

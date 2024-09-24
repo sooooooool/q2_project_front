@@ -60,6 +60,7 @@ const CourseCreatePage: React.FC = () => {
 
   const handleSubmit = async (values: any) => {
     try {
+      console.log("Received value of form:", values);
       if (!values.upload || !values.upload.length) {
         message.error("이미지를 업로드해 주세요.");
         return;

@@ -62,10 +62,14 @@ const CourseSelectPage = () => {
   const { user } = useAuth(); // AuthContext에서 로그인 상태를 가져옴
   const [sortOrder, setSortOrder] = useState("latest"); // 기본 정렬을 최신순으로 설정
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 상태 관리
-  const [location, setLocation] = useState(0); // 검색한 위치 정보
-  const [courses, setCourses] = useState([]); // 코스 데이터를 저장하는 상태
+  const [location, setLocation] = useState<number | null>(() => {
+    const query = new URLSearchParams(window.location.search);
+    return Number(query.get("value")) || 1;
+  }); // 검색한 위치 정보
+  const [courses, setCourses] = useState<Array<CourseSummary>>([]); // 코스 데이터를 저장하는 상태
   const [loading, setLoading] = useState(false); // 로딩 상태
   const [error, setError] = useState<string | null>(null); // 에러 상태
+  const [pageTotal, setPageTotal] = useState(0);
   const locationData = {
     1: "성수",
     2: "홍대",
@@ -75,21 +79,30 @@ const CourseSelectPage = () => {
     6: "건대",
   };
 
-  useEffect(() => {
-    const query = new URLSearchParams(window.location.search);
-    setLocation(Number(query.get("value")) || 1);
-  }, []);
-
   // 코스 데이터를 API에서 가져오는 함수
   const fetchCourses = async (data: queryData) => {
     setLoading(true); // 로딩 상태 시작
     setError(null); // 기존 에러 초기화
     try {
       // 기존 더미 데이터 대신 API 요청으로 대체
+      console.log("This is queryDAta : ", data);
       const response = await axios.get(
         `/course-api?data=${encode2queryData(data)}`
       ); // API 요청
-      setCourses(response.data); // 받아온 코스 데이터 상태에 저장
+      const { modifiedCourses, total } = response.data;
+      setPageTotal(total);
+      const getCourses = modifiedCourses.map((course: any) => ({
+        id: course.id,
+        title: course.title,
+        userName: course.userName,
+        // location: course.location,
+        tags: course.tags,
+        imageUrl: course.imageUrl || I.randomImage(800, 600),
+        // time: course.createdAt,
+        meanrating: course.meanStartPoint,
+      }));
+      console.log("This is response data Courses : ", getCourses);
+      setCourses(getCourses); // 받아온 코스 데이터 상태에 저장
     } catch (err) {
       setError("코스 데이터를 불러오는 데 실패했습니다.");
       message.error("코스 데이터를 불러오는 데 문제가 발생했습니다.");
@@ -98,10 +111,12 @@ const CourseSelectPage = () => {
     }
   };
 
-  // 컴포넌트가 마운트되면 코스 데이터를 가져옴
+  // location, currentPage, sortOrder가 변경될 때마다 fetchCourses 호출
   useEffect(() => {
-    fetchCourses({ location: location });
-  }, [location]);
+    if (location !== null) {
+      fetchCourses({ location: location });
+    }
+  }, [location, currentPage, sortOrder]);
 
   // 더미 코스 데이터
   // const courses = [
@@ -335,7 +350,7 @@ const CourseSelectPage = () => {
         <Pagination
           current={currentPage}
           pageSize={pageSize}
-          total={courses.length}
+          total={pageTotal}
           onChange={handlePageChange}
         />
       </div>
