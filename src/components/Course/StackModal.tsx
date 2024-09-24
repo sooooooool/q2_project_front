@@ -1,6 +1,6 @@
-import React from 'react';
-import { Modal, List, Button, Pagination, Spin, Alert } from 'antd';
-import * as T from '../../types';
+import React from "react";
+import { Modal, List, Button, Pagination, Spin, Alert } from "antd";
+import * as T from "../../types";
 
 const StackModal: React.FC<T.StackModalProps> = ({
   visible,
@@ -13,12 +13,7 @@ const StackModal: React.FC<T.StackModalProps> = ({
   onSelect,
   error,
 }) => (
-  <Modal
-    title="스팟 선택"
-    open={visible}
-    onCancel={onCancel}
-    footer={null}
-  >
+  <Modal title="스팟 선택" open={visible} onCancel={onCancel} footer={null}>
     {error && <Alert message="데이터 로드 실패" type="error" showIcon />}
     {loading ? (
       <Spin />
@@ -39,7 +34,11 @@ const StackModal: React.FC<T.StackModalProps> = ({
       total={total}
       pageSize={10}
       onChange={onPageChange}
-      style={{ textAlign: 'center', marginTop: '16px' }}
+      style={{
+        textAlign: "center",
+        marginTop: "16px",
+        justifyContent: "center",
+      }}
     />
   </Modal>
 );

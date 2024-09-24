@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { Row, Col, Dropdown, Input, Pagination, FloatButton, message } from "antd";
+import {
+  Row,
+  Col,
+  Dropdown,
+  Input,
+  Pagination,
+  FloatButton,
+  message,
+} from "antd";
 import { DownOutlined, SearchOutlined, PlusOutlined } from "@ant-design/icons";
 import axios from "axios";
 import CustomLink from "../components/Common/Link";
@@ -7,9 +15,18 @@ import CourseCard from "../components/Course/Course";
 import * as I from "../assets/random";
 import { useAuth } from "../hooks/useAuth"; // 커스텀 훅으로 AuthContext 사용
 import { CourseSummary } from "../types";
-
+import { encode2queryData } from "../services/encode";
 
 const pageSize = 5; // 한 페이지에 표시할 코스의 수
+
+interface queryData {
+  location?: number;
+  sortBy?: string;
+  user?: number;
+  limit?: number;
+  offset?: number;
+  direction?: string;
+}
 
 // 코스를 정렬하는 함수
 const sortCourses = (courses: any, sortOrder: any) => {
@@ -45,18 +62,33 @@ const CourseSelectPage = () => {
   const { user } = useAuth(); // AuthContext에서 로그인 상태를 가져옴
   const [sortOrder, setSortOrder] = useState("latest"); // 기본 정렬을 최신순으로 설정
   const [currentPage, setCurrentPage] = useState(1); // 현재 페이지 상태 관리
-  const [location, setLocation] = useState("성수"); // 검색한 위치 정보
+  const [location, setLocation] = useState(0); // 검색한 위치 정보
   const [courses, setCourses] = useState([]); // 코스 데이터를 저장하는 상태
   const [loading, setLoading] = useState(false); // 로딩 상태
   const [error, setError] = useState<string | null>(null); // 에러 상태
+  const locationData = {
+    1: "성수",
+    2: "홍대",
+    3: "합정",
+    4: "강남",
+    5: "신촌",
+    6: "건대",
+  };
+
+  useEffect(() => {
+    const query = new URLSearchParams(window.location.search);
+    setLocation(Number(query.get("value")) || 1);
+  }, []);
 
   // 코스 데이터를 API에서 가져오는 함수
-  const fetchCourses = async (data: any) => {
+  const fetchCourses = async (data: queryData) => {
     setLoading(true); // 로딩 상태 시작
     setError(null); // 기존 에러 초기화
     try {
       // 기존 더미 데이터 대신 API 요청으로 대체
-      const response = await axios.get(`/course-api?data=${JSON.stringify(data)}`); // API 요청
+      const response = await axios.get(
+        `/course-api?data=${encode2queryData(data)}`
+      ); // API 요청
       setCourses(response.data); // 받아온 코스 데이터 상태에 저장
     } catch (err) {
       setError("코스 데이터를 불러오는 데 실패했습니다.");
@@ -68,7 +100,7 @@ const CourseSelectPage = () => {
 
   // 컴포넌트가 마운트되면 코스 데이터를 가져옴
   useEffect(() => {
-    fetchCourses({});
+    fetchCourses({ location: location });
   }, [location]);
 
   // 더미 코스 데이터
@@ -266,12 +298,12 @@ const CourseSelectPage = () => {
         }}
       >
         <Col xs={24} sm={22}>
-        {loading ? (
+          {loading ? (
             <div>로딩 중...</div>
           ) : error ? (
             <div>{error}</div>
           ) : (
-            paginatedCourses.map((course:CourseSummary) => (
+            paginatedCourses.map((course: CourseSummary) => (
               <CustomLink
                 key={course.id}
                 to={`/course/${course.id}`}

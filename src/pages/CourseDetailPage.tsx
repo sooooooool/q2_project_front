@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Button, Rate, Input, List, Row, Col } from "antd";
-import { StarFilled } from "@ant-design/icons";
+import { StarFilled, ArrowLeftOutlined } from "@ant-design/icons";
 import * as I from "../assets/random";
 import ExampleImage from "../assets/images/ExampleImage.png";
-import CloseIcon from "../assets/images/Icon.svg";
 import HotPlaceIcon1 from "../assets/images/HotPlaceIcon1.svg";
 import HotPlaceIcon2 from "../assets/images/HotPlaceIcon2.svg";
 import HotPlaceIcon3 from "../assets/images/HotPlaceIcon3.svg";
@@ -195,7 +194,17 @@ const CourseDetailPage: React.FC = () => {
   const [loading, setLoading] = useState(true); // 로딩 상태 관리
   const [userReview, setUserReview] = useState(""); // 사용자 리뷰 상태
   const [userRating, setUserRating] = useState(3); // 기본값 3점
+  const [inProp, setInProp] = useState(true);
 
+  const handleBack = () => {
+    // 슬라이드 애니메이션을 시작하기 위해 inProp을 false로 설정
+    setInProp(false);
+    // 일정 시간이 지난 후 페이지 이동
+    setTimeout(() => {
+      // 페이지 이동
+      window.location.href = "/course-select"; // 또는 react-router-dom의 history.push를 사용 가능
+    }, 300); // 애니메이션 시간과 맞춰서 설정
+  };
   // 백엔드에서 데이터 가져오기
   useEffect(() => {
     const fetchData = async () => {
@@ -247,13 +256,9 @@ const CourseDetailPage: React.FC = () => {
             cursor: "pointer",
             zIndex: 10,
           }}
+          aria-label="닫기 버튼"
         >
-          <img
-            src={CloseIcon}
-            alt="닫기"
-            style={{ width: "16px", height: "16px" }}
-            aria-label="닫기 버튼"
-          />
+          <ArrowLeftOutlined style={{ fontSize: "16px", color: "black" }} />{" "}
         </span>
       </Link>
 

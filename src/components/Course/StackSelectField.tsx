@@ -22,9 +22,14 @@ const StackSelectField: React.FC<{
       placeholder="다녀온 핫플을 선택하세요."
       value={selectedSpot ? selectedSpot.Spot_Name : ""}
       onClick={showModal}
+      style={{
+        backgroundColor: "#f7f7f7",
+        borderRadius: "10px",
+        border: "1px solid #e0e0e0",
+        padding: "8px",
+      }}
       readOnly
     />
-
   </Form.Item>
 );
 

@@ -13,29 +13,40 @@ import LeftArrowIcon from "../assets/images/LeftArrowIcon.png";
 const LocationContainer: React.FC = () => {
   const locations = [
     {
+      id: 1,
       locationName: "성수",
       imageUrl: I.randomImage(800, 600),
-      linkUrl: "/course?value=seongsu",
+      linkUrl: "/course?value=1",
     },
     {
+      id: 2,
       locationName: "홍대",
       imageUrl: I.randomImage(800, 600),
-      linkUrl: "/course?value=hongdae",
+      linkUrl: "/course?value=2",
     },
     {
+      id: 3,
+      locationName: "합정",
+      imageUrl: I.randomImage(800, 600),
+      linkUrl: "/course?value=3",
+    },
+    {
+      id: 4,
       locationName: "강남",
       imageUrl: I.randomImage(800, 600),
-      linkUrl: "/course?value=gangnam",
+      linkUrl: "/course?value=4",
     },
     {
+      id: 5,
       locationName: "신촌",
       imageUrl: I.randomImage(800, 600),
-      linkUrl: "/course?value=sinchon",
+      linkUrl: "/course?value=5",
     },
     {
+      Id: 6,
       locationName: "건대",
       imageUrl: I.randomImage(800, 600),
-      linkUrl: "/course?value=konkuk",
+      linkUrl: "/course?value=6",
     },
   ];
 
@@ -94,7 +105,7 @@ const LocationContainer: React.FC = () => {
       >
         <Title
           style={{
-            fontSize: "30px",
+            fontSize: "28px",
             fontWeight: "700",
             letterSpacing: "-0.48px",
             color: "#ff6f0f",

@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { Form, Input, Button, Upload, message } from "antd";
-import { UploadOutlined } from "@ant-design/icons";
+import { UploadOutlined, ArrowLeftOutlined } from "@ant-design/icons";
 import axios from "axios";
 import StackModal from "../components/Course/StackModal";
 import StackSelectField from "../components/Course/StackSelectField";
 import useFetchModalData from "../hooks/useFetchModalData";
 import * as T from "../types";
 import { useAuth } from "../context/AuthContext";
-import { Link } from "react-router-dom";
-import CloseIcon from "../assets/images/Icon.svg";
+import { Link, redirect } from "react-router-dom";
 
 const { TextArea } = Input;
 
@@ -68,7 +67,7 @@ const CourseCreatePage: React.FC = () => {
 
       const formData = new FormData();
       fileList.forEach((file) => {
-        formData.append('files', file.originFileObj);
+        formData.append("files", file.originFileObj);
       });
 
       const courseResponse = await axios.post(`${apiEndpoint}/course-api`, {
@@ -95,6 +94,7 @@ const CourseCreatePage: React.FC = () => {
       form.resetFields();
       setSelectedSpots({});
       setFileList([]);
+      redirect("/course");
     } catch (error) {
       console.error("Error submitting form:", error);
       message.error("Failed to submit the form.");
@@ -102,7 +102,7 @@ const CourseCreatePage: React.FC = () => {
   };
 
   const normFile = (e: { fileList: any }) => {
-    console.log('Upload event:', e);
+    console.log("Upload event:", e);
     if (Array.isArray(e)) {
       return e;
     }
@@ -128,46 +128,41 @@ const CourseCreatePage: React.FC = () => {
             zIndex: 1000,
           }}
         >
-          <img
-            src={CloseIcon}
-            alt="닫기"
-            style={{ width: "16px", height: "16px" }}
-            aria-label="닫기 버튼" // 접근성 향상
-          />
+          <ArrowLeftOutlined style={{ fontSize: "16px", color: "black" }} />{" "}
         </span>
       </Link>
       <Form
         form={form}
         layout="vertical"
         onFinish={handleSubmit}
-        style={{ maxWidth: "400px", margin: "0 auto" }}
+        style={{ maxWidth: "400px", margin: "0 auto", fontWeight: "bold" }}
       >
-      {/* 이전 변경사항 유지 */}
-      <Form.Item
-        name="upload"
-        label="사진/이미지"
-        valuePropName="fileList"
-        getValueFromEvent={normFile}
-      >
-        <Upload
-          listType="picture-card"
-          fileList={fileList}
-          onChange={({ fileList }) => setFileList(fileList)}
-          beforeUpload={(file) => {
-            const isValidSize = file.size / 1024 / 1024 < 2; // Limit to 2MB
-            if (!isValidSize) {
-              message.error("파일 크기는 2MB를 초과할 수 없습니다.");
-            }
-            return isValidSize || Upload.LIST_IGNORE;
-          }}
-          multiple={true}
+        {/* 이전 변경사항 유지 */}
+        <Form.Item
+          name="upload"
+          label="사진/이미지"
+          valuePropName="fileList"
+          getValueFromEvent={normFile}
         >
-          {fileList.length >= 8 ? null : (
-            <div>
-              <UploadOutlined />
-              <div style={{ marginTop: 8 }}>Upload</div>
-            </div>
-          )}
+          <Upload
+            listType="picture-card"
+            fileList={fileList}
+            onChange={({ fileList }) => setFileList(fileList)}
+            beforeUpload={(file) => {
+              const isValidSize = file.size / 1024 / 1024 < 2; // Limit to 2MB
+              if (!isValidSize) {
+                message.error("파일 크기는 2MB를 초과할 수 없습니다.");
+              }
+              return isValidSize || Upload.LIST_IGNORE;
+            }}
+            multiple={true}
+          >
+            {fileList.length >= 8 ? null : (
+              <div>
+                <UploadOutlined />
+                <div style={{ marginTop: 8 }}>Upload</div>
+              </div>
+            )}
           </Upload>
         </Form.Item>
 
@@ -176,7 +171,15 @@ const CourseCreatePage: React.FC = () => {
           label="제목"
           rules={[{ required: true, message: "제목을 입력하세요." }]}
         >
-          <Input placeholder="제목을 입력하세요." />
+          <Input
+            placeholder="제목을 입력하세요."
+            style={{
+              backgroundColor: "#f7f7f7",
+              borderRadius: "10px",
+              border: "1px solid #e0e0e0",
+              padding: "8px",
+            }}
+          />
         </Form.Item>
 
         {Array.from({ length: 4 }).map((_, index) => (
@@ -189,11 +192,32 @@ const CourseCreatePage: React.FC = () => {
         ))}
 
         <Form.Item name="content" label="내용">
-          <TextArea rows={4} placeholder="이런 데이터는 어떠냐요?" />
+          <TextArea
+            rows={4}
+            placeholder="이번 데이트는 어땠나요?"
+            style={{
+              backgroundColor: "#f7f7f7",
+              borderRadius: "10px",
+              border: "1px solid #e0e0e0",
+              padding: "10px",
+            }}
+          />
         </Form.Item>
 
         <Form.Item>
-          <Button type="primary" htmlType="submit" block>
+          <Button
+            type="primary"
+            htmlType="submit"
+            block
+            style={{
+              backgroundColor: "black",
+              borderRadius: "30px",
+              border: "1px solid #e0e0e0",
+              color: "white",
+              padding: "25px",
+              fontSize: "17px",
+            }}
+          >
             등록하기
           </Button>
         </Form.Item>

@@ -7,6 +7,11 @@
 }
 
 /* 폰트를 전체 애플리케이션에 적용 */
-body {
-  font-family: "Pretendard", sans-serif;
+body,
+.ant-input,
+.ant-btn,
+.ant-form-item-label > label,
+.ant-input-textarea,
+.ant-form-item-explain-error {
+  font-family: "Pretendard", sans-serif !important;
 }
