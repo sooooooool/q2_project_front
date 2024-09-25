@@ -23,8 +23,8 @@ interface queryData {
   location?: number;
   sortBy?: string;
   user?: number;
-  limit?: number;
-  offset?: number;
+  page?: number;
+  pageSize?: number;
   direction?: string;
 }
 
@@ -113,7 +113,7 @@ const CourseSelectPage = () => {
   // location, currentPage, sortOrder가 변경될 때마다 fetchCourses 호출
   useEffect(() => {
     if (location !== null) {
-      fetchCourses({ location: location });
+      fetchCourses({ location: location, page: currentPage, pageSize: pageSize });
     }
   }, [location, currentPage, sortOrder]);
 
