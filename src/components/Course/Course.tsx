@@ -40,7 +40,13 @@ const CourseCard: React.FC<CourseSummary> = ({
       bodyStyle={{ padding: "20px" }}
     >
       <AntCard.Meta
-        avatar={<Avatar shape="square" size={120} src={imageUrl} />}
+        avatar={
+          <Avatar
+            shape="square"
+            size={120}
+            src={<img src={imageUrl} alt="NotFound" loading="lazy" />}
+          />
+        }
         title={title}
         description={
           <div>

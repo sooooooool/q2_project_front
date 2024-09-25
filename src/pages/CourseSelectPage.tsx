@@ -70,6 +70,8 @@ const CourseSelectPage = () => {
   const [loading, setLoading] = useState(false); // 로딩 상태
   const [error, setError] = useState<string | null>(null); // 에러 상태
   const [pageTotal, setPageTotal] = useState(0);
+  const [paginatedCourses, setPaginatedCourses] = useState<CourseSummary[]>([]); // 페이지네이션된 코스 상태 관리
+
   const locationData = {
     1: "성수",
     2: "홍대",
@@ -84,24 +86,21 @@ const CourseSelectPage = () => {
     setLoading(true); // 로딩 상태 시작
     setError(null); // 기존 에러 초기화
     try {
-      // 기존 더미 데이터 대신 API 요청으로 대체
-      console.log("This is queryDAta : ", data);
-      const response = await axios.get(
-        `/course-api?data=${encode2queryData(data)}`
-      ); // API 요청
+      const encodedQuery = encode2queryData(data);
+      const response = await axios.get(`course-api?data=${encodedQuery}`);
       const { modifiedCourses, total } = response.data;
+      console.log("Received Courses:", modifiedCourses);
       setPageTotal(total);
+
       const getCourses = modifiedCourses.map((course: any) => ({
         id: course.id,
         title: course.title,
         userName: course.userName,
-        // location: course.location,
         tags: course.tags,
         imageUrl: course.imageUrl || I.randomImage(800, 600),
-        // time: course.createdAt,
         meanrating: course.meanStartPoint,
       }));
-      console.log("This is response data Courses : ", getCourses);
+
       setCourses(getCourses); // 받아온 코스 데이터 상태에 저장
     } catch (err) {
       setError("코스 데이터를 불러오는 데 실패했습니다.");
@@ -118,117 +117,22 @@ const CourseSelectPage = () => {
     }
   }, [location, currentPage, sortOrder]);
 
-  // 더미 코스 데이터
-  // const courses = [
-  //   {
-  //     id: 1,
-  //     title: "코스 제목 1",
-  //     userName: "유저 닉네임 1",
-  //     tags: ["#맛집", "#산책"],
-  //     imageUrl: I.randomImage(800, 600),
-  //     time: 5,
-  //     comments: 20,
-  //     likes: 20,
-  //     meanrating: 4.0,
-  //     ratingCount: 10,
-  //   },
-  //   {
-  //     id: 2,
-  //     title: "코스 제목 2",
-  //     userName: "유저 닉네임 2",
-  //     tags: ["#카페", "#산책"],
-  //     imageUrl: I.randomImage(800, 600),
-  //     time: 5,
-  //     comments: 20,
-  //     likes: 20,
-  //     meanrating: 3.5,
-  //     ratingCount: 5,
-  //   },
-  //   {
-  //     id: 3,
-  //     title: "코스 제목 3",
-  //     userName: "유저 닉네임 3",
-  //     tags: ["#맛집", "#산책"],
-  //     imageUrl: I.randomImage(800, 600),
-  //     time: 5,
-  //     comments: 20,
-  //     likes: 20,
-  //     meanrating: 4.5,
-  //     ratingCount: 20,
-  //   },
-  //   {
-  //     id: 4,
-  //     title: "코스 제목 4",
-  //     userName: "유저 닉네임 4",
-  //     tags: ["#카페", "#산책"],
-  //     imageUrl: I.randomImage(800, 600),
-  //     time: 5,
-  //     comments: 20,
-  //     likes: 20,
-  //     meanrating: 3.0,
-  //     ratingCount: 2,
-  //   },
-  //   {
-  //     id: 5,
-  //     title: "코스 제목 5",
-  //     userName: "유저 닉네임 5",
-  //     tags: ["#카페", "#산책"],
-  //     imageUrl: I.randomImage(800, 600),
-  //     time: 5,
-  //     comments: 20,
-  //     likes: 20,
-  //     meanrating: 3.0,
-  //     ratingCount: 2,
-  //   },
-  //   {
-  //     id: 6,
-  //     title: "코스 제목 6",
-  //     userName: "유저 닉네임 6",
-  //     tags: ["#카페", "#산책"],
-  //     imageUrl: I.randomImage(800, 600),
-  //     time: 5,
-  //     comments: 20,
-  //     likes: 20,
-  //     meanrating: 3.0,
-  //     ratingCount: 2,
-  //   },
-  //   {
-  //     id: 7,
-  //     title: "코스 제목 7",
-  //     userName: "유저 닉네임 7",
-  //     tags: ["#카페", "#산책"],
-  //     imageUrl: I.randomImage(800, 600),
-  //     time: 5,
-  //     comments: 20,
-  //     likes: 20,
-  //     meanrating: 3.0,
-  //     ratingCount: 2,
-  //   },
-  //   {
-  //     id: 8,
-  //     title: "코스 제목 8",
-  //     userName: "유저 닉네임 8",
-  //     tags: ["#카페", "#산책"],
-  //     imageUrl: I.randomImage(800, 600),
-  //     time: 5,
-  //     comments: 20,
-  //     likes: 20,
-  //     meanrating: 3.0,
-  //     ratingCount: 2,
-  //   },
-  //   {
-  //     id: 9,
-  //     title: "코스 제목 9",
-  //     userName: "유저 닉네임 9",
-  //     tags: ["#카페", "#산책"],
-  //     imageUrl: I.randomImage(800, 600),
-  //     time: 5,
-  //     comments: 20,
-  //     likes: 20,
-  //     meanrating: 3.0,
-  //     ratingCount: 2,
-  //   },
-  // ];
+  // currentPage, sortOrder, courses가 변경될 때마다 paginatedCourses 업데이트
+  useEffect(() => {
+    const updatedPaginatedCourses = getPaginatedCourses(
+      courses,
+      sortOrder,
+      currentPage,
+      pageSize
+    );
+
+    console.log("업데이트된 코스 목록:", updatedPaginatedCourses); // 코스 데이터 출력
+    updatedPaginatedCourses.forEach((course: { id: any; imageUrl: any }) => {
+      console.log("Course ID:", course.id, "Image URL:", course.imageUrl);
+    });
+
+    setPaginatedCourses(updatedPaginatedCourses); // 페이지네이션된 코스 상태 업데이트
+  }, [courses, sortOrder, currentPage]);
 
   // 필터 메뉴 설정
   const menuItems = [
@@ -245,14 +149,6 @@ const CourseSelectPage = () => {
   const handlePageChange = (page: React.SetStateAction<number>) => {
     setCurrentPage(page); // 페이지 변경
   };
-
-  // 현재 페이지에 맞는 코스 추출
-  const paginatedCourses = getPaginatedCourses(
-    courses,
-    sortOrder,
-    currentPage,
-    pageSize
-  );
 
   return (
     <>
