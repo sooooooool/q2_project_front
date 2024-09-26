@@ -20,7 +20,8 @@ const useFetchCourses = () => {
   const [total, setTotal] = useState<number>(0);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const pageSize = 5; // 필요한 경우 페이지 크기를 조정하세요
-  const apiEndpoint = process.env.REACT_APP_BACKEND_URL || "http://localhost:3001";
+  const apiEndpoint =
+    process.env.REACT_APP_BACKEND_URL || "http://localhost:3001";
 
   const fetchData = async (data: QueryData) => {
     setLoading(true);
@@ -42,7 +43,7 @@ const useFetchCourses = () => {
           userName: course.userName,
           tags: course.tags,
           imageUrl: course.imageUrl || I.randomImage(800, 600),
-          meanrating: course.meanStartPoint,
+          meanrating: course.meanStarPoint,
         }))
       );
       setTotal(total);
@@ -54,7 +55,16 @@ const useFetchCourses = () => {
     }
   };
 
-  return { courses, loading, error, total, currentPage, setCurrentPage, fetchData, pageSize };
+  return {
+    courses,
+    loading,
+    error,
+    total,
+    currentPage,
+    setCurrentPage,
+    fetchData,
+    pageSize,
+  };
 };
 
 export default useFetchCourses;
