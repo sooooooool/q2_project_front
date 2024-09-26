@@ -36,7 +36,11 @@ const CourseCard: React.FC<CourseSummary> = ({
   return (
     <AntCard
       hoverable
-      style={{ width: "100%", marginBottom: 16, borderRadius: 16 }}
+      style={{
+        width: "100%",
+        marginBottom: 16,
+        borderRadius: 16,
+      }}
       bodyStyle={{ padding: "20px" }}
     >
       <AntCard.Meta

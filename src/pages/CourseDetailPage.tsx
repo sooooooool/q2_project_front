@@ -216,7 +216,7 @@ const CourseImage: React.FC<{ imageUrlList: string[] }> = ({
   <div style={{ textAlign: "center", marginBottom: "20px", marginTop: "20px" }}>
     {imageUrlList.length === 0 ? (
       <img
-        src={"Course"}
+        src={"/" + imageUrlList[0]}
         alt={"Course"}
         style={{
           width: "100%",
@@ -230,7 +230,7 @@ const CourseImage: React.FC<{ imageUrlList: string[] }> = ({
         {imageUrlList.map((imageUrl, index) => (
           <div key={index}>
             <img
-              src={imageUrl}
+              src={"/" + imageUrl}
               alt={`Course`}
               style={{
                 width: "100%",
@@ -362,23 +362,6 @@ const CourseDetailPage: React.FC = () => {
       <div style={{ margin: "20px 0" }}>
         {course?.spots && <HotPlaceList spots={course.spots} />}
       </div>
-
-      {/* 코스 경로 이미지 */}
-      {/* <div style={{ textAlign: "center", marginBottom: "20px" }}>
-        <h2 style={{ fontSize: "20px", textAlign: "left", marginBottom: "10px" }}>
-          코스 경로
-        </h2>
-        <img
-          src={ExampleImage}
-          alt="Course Route"
-          style={{
-            width: "100%",
-            height: "300px",
-            objectFit: "cover",
-            borderRadius: "10px",
-          }}
-        />
-      </div> */}
 
       {/* 댓글 섹션 - course.comment의 내용으로 채움 */}
       <CommentList comments={comments} />

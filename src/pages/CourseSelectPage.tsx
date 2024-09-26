@@ -15,7 +15,9 @@ import CustomLink from "../components/Common/Link";
 import CourseCard from "../components/Course/Course";
 import { useAuth } from "../hooks/useAuth"; // AuthContext를 위한 커스텀 훅
 import { CourseSummary } from "../types";
-import useFetchCourses from "../hooks/useFetchCourses"; // 코스 데이터 페칭 커스텀 훅/
+import useFetchCourses from "../hooks/useFetchCourses"; // 코스 데이터 페칭 커스텀 훅
+import "../styles/globals.css";
+import "../App.css";
 
 const CourseSelectPage = () => {
   const { user } = useAuth(); // AuthContext에서 로그인 상태 가져오기
@@ -65,31 +67,22 @@ const CourseSelectPage = () => {
       {/* 상단 필터 영역 */}
       <div
         style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          position: "relative",
+          textAlign: "center",
           fontSize: "17px",
           fontWeight: "bold",
+          marginBottom: "20px",
         }}
       >
-        <div style={{ position: "absolute", right: 0, padding: "0px 50px" }}>
-          <Dropdown menu={{ items: menuItems, onClick: handleMenuClick }}>
-            <a onClick={(e) => e.preventDefault()} style={{ color: "black" }}>
-              {sortOrder === "latest" ? "최신순" : "평점순"} <DownOutlined />
-            </a>
-          </Dropdown>
-        </div>
+        <Dropdown menu={{ items: menuItems, onClick: handleMenuClick }}>
+          <a onClick={(e) => e.preventDefault()} style={{ color: "black" }}>
+            {sortOrder === "latest" ? "최신순" : "평점순"} <DownOutlined />
+          </a>
+        </Dropdown>
       </div>
-
       {/* 검색 인풋 필드 */}
       <div
         style={{
           padding: "12px 30px",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "flex-start",
-          marginTop: "30px",
           marginBottom: "20px",
         }}
       >
@@ -105,49 +98,48 @@ const CourseSelectPage = () => {
             outline: "none",
             height: "50px",
             fontSize: "14px",
+            width: "100%",
           }}
         />
       </div>
-
       {/* 코스 리스트 */}
-      <Row
-        justify="center"
+      <div
         style={{
+          display: "block",
           width: "100%",
-          display: "flex",
-          justifyContent: "center",
+          maxWidth: "1200px",
+          margin: "0 auto", // 가운데 정렬
+          padding: "0 30px",
         }}
       >
-        <Col xs={24} sm={22}>
-          {loading ? (
-            <Spin />
-          ) : error ? (
-            <div>코스 데이터를 불러오는 데 실패했습니다.</div>
-          ) : (
-            <List
-              dataSource={courses}
-              renderItem={(course: CourseSummary) => (
-                <List.Item key={course.id}>
-                  <CustomLink
-                    to={`/course/${course.id}`}
-                    icon={
-                      <CourseCard
-                        id={course.id}
-                        title={course.title}
-                        userName={course.userName}
-                        tags={course.tags}
-                        imageUrl={course.imageUrl}
-                        meanrating={course.meanrating}
-                      />
-                    }
-                  />
-                </List.Item>
-              )}
-            />
-          )}
-        </Col>
-      </Row>
-
+        {loading ? (
+          <Spin />
+        ) : error ? (
+          <div>코스 데이터를 불러오는 데 실패했습니다.</div>
+        ) : (
+          <List
+            grid={{ gutter: 0, column: 1 }}
+            dataSource={courses}
+            renderItem={(course: CourseSummary) => (
+              <List.Item key={course.id}>
+                <CustomLink
+                  to={`/course/${course.id}`}
+                  icon={
+                    <CourseCard
+                      id={course.id}
+                      title={course.title}
+                      userName={course.userName}
+                      tags={course.tags}
+                      imageUrl={course.imageUrl}
+                      meanrating={course.meanrating}
+                    />
+                  }
+                />
+              </List.Item>
+            )}
+          />
+        )}
+      </div>
       {/* 페이지네이션 */}
       <div
         style={{
@@ -162,30 +154,22 @@ const CourseSelectPage = () => {
           total={total}
           pageSize={pageSize}
           onChange={handlePageChange}
-          style={{
-            textAlign: "center",
-            marginTop: "16px",
-            justifyContent: "center",
-          }}
         />
       </div>
-
       {/* 코스 생성 페이지로 이동하는 플로팅 버튼 */}
-      {
-        user ? (
-          <CustomLink
-            to="/course/create"
-            icon={
-              <FloatButton
-                icon={<PlusOutlined />}
-                type="primary"
-                tooltip="Create Course"
-                style={{ right: 24, bottom: 24 }}
-              />
-            }
-          />
-        ) : null /* 로그인되지 않은 경우 버튼 숨김 */
-      }
+      {user ? (
+        <CustomLink
+          to="/course/create"
+          icon={
+            <FloatButton
+              icon={<PlusOutlined />}
+              type="primary"
+              tooltip="Create Course"
+              style={{ right: 24, bottom: 24 }}
+            />
+          }
+        />
+      ) : null}
     </>
   );
 };

@@ -102,6 +102,17 @@ body {
   background-color: #5642cc;
   font-family: "Pretendard", sans-serif !important;
 }
+
+.ant-list-item {
+  display: block !important; /* 강제로 flex 대신 block 적용 */
+  align-items: flex-start !important; /* flex 속성 초기화 */
+  justify-content: initial !important; /* flex 속성 초기화 */
+}
+
+.ant-list {
+  display: block !important; /* 강제로 flex 대신 block 적용 */
+}
+
 /* 슬라이드 인/아웃을 위한 기본 설정 */
 .slide-enter {
   transform: translateX(100%);
