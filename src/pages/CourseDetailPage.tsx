@@ -2,42 +2,69 @@ import React, { useState, useEffect } from "react";
 import { useParams, Link } from "react-router-dom";
 import { Button, Rate, Input, List, Row, Col } from "antd";
 import { StarFilled, ArrowLeftOutlined } from "@ant-design/icons";
+import { Carousel } from "antd";
 import * as I from "../assets/random";
+import axios from "axios";
 import ExampleImage from "../assets/images/ExampleImage.png";
 import HotPlaceIcon1 from "../assets/images/HotPlaceIcon1.svg";
 import HotPlaceIcon2 from "../assets/images/HotPlaceIcon2.svg";
 import HotPlaceIcon3 from "../assets/images/HotPlaceIcon3.svg";
 import HotPlaceIcon4 from "../assets/images/HotPlaceIcon4.svg";
 import SubmitIcon from "../assets/images/SubmitIcon.svg";
-import axios from "axios";
 
-// 코스 정보 타입 정의
-type CourseDetail = {
+export interface spotUseCourse {
   id: number;
+  Spot_Name: string;
+  Category: string;
+  icon: string;
+}
+
+export type CourseDetail = {
+  id: number;
+  nickname: string;
   title: string;
   location: string;
-  ratingCount: number;
-  meanRating: number;
+  meanStarPoint: number;
+  countStarPoint: number;
   stops: string[];
-  imageUrl?: string;
-  comments: { text: string; date: string }[];
+  imageUrlList?: string[];
+  content: string;
+  updatedAt: string;
+  comments: {
+    comment_content: string;
+    createdAt: string;
+    nickname: string;
+    starPoint: number;
+  }[];
+  spots: spotUseCourse[]; // 핫플레이스에 사용할 spots 추가
 };
 
-// 핫플레이스 컴포넌트
-const HotPlaceList: React.FC = () => {
-  const hotPlaces = [
-    { id: 1, name: "동구식당", icon: HotPlaceIcon1 },
-    { id: 2, name: "소적두 성수점", icon: HotPlaceIcon2 },
-    { id: 3, name: "디올 성수", icon: HotPlaceIcon3 },
-    { id: 4, name: "스케줄 성수", icon: HotPlaceIcon4 },
-  ];
-
-  const displayedHotPlaces = hotPlaces.slice(0, 4); // 4개까지 표시
+// 핫플레이스 컴포넌트 - spots 데이터를 활용
+const HotPlaceList: React.FC<{ spots: spotUseCourse[] }> = ({ spots }) => {
+  const displayedHotPlaces = spots.slice(0, 4); // 최대 4개의 핫플레이스만 표시
+  spots.forEach((spot, index) => {
+    switch (index) {
+      case 0:
+        spot.icon = HotPlaceIcon1;
+        break;
+      case 1:
+        spot.icon = HotPlaceIcon2;
+        break;
+      case 2:
+        spot.icon = HotPlaceIcon3;
+        break;
+      case 3:
+        spot.icon = HotPlaceIcon4;
+        break;
+      default:
+        spot.icon = "";
+    }
+  });
 
   return (
     <div>
       <Row gutter={[16, 16]}>
-        {displayedHotPlaces.map((place) => (
+        {displayedHotPlaces.map((place, index) => (
           <Col span={24} key={place.id}>
             <div
               style={{
@@ -53,12 +80,13 @@ const HotPlaceList: React.FC = () => {
             >
               <img
                 src={place.icon}
-                alt={`icon-${place.id}`}
+                alt={`icon-${index}`}
                 style={{ width: "24px", height: "24px", marginRight: "10px" }}
               />
               <span style={{ fontSize: "16px", fontWeight: "bold" }}>
-                {place.name}
+                {place.Spot_Name}
               </span>
+              <span>({place.Category})</span>
             </div>
           </Col>
         ))}
@@ -67,10 +95,15 @@ const HotPlaceList: React.FC = () => {
   );
 };
 
-// 댓글 리스트 컴포넌트
-const CommentList: React.FC<{ comments: { text: string; date: string }[] }> = ({
-  comments,
-}) => (
+// 댓글 리스트 컴포넌트 - CommentList를 course.comment로 채울 예정
+const CommentList: React.FC<{
+  comments: {
+    comment_content: string;
+    createdAt: string;
+    nickname: string;
+    starPoint: number;
+  }[];
+}> = ({ comments }) => (
   <div>
     <h3>댓글</h3>
     {comments.length === 0 ? (
@@ -89,8 +122,10 @@ const CommentList: React.FC<{ comments: { text: string; date: string }[] }> = ({
         dataSource={comments}
         renderItem={(comment) => (
           <List.Item>
-            <List.Item.Meta description={comment.text} />
-            <div>{comment.date}</div>
+            <List.Item.Meta description={comment.comment_content} />
+            <div>{comment.createdAt}</div>
+            <div>{comment.nickname}</div>
+            <div>{comment.starPoint}점</div>
           </List.Item>
         )}
       />
@@ -98,7 +133,7 @@ const CommentList: React.FC<{ comments: { text: string; date: string }[] }> = ({
   </div>
 );
 
-// 코스 평가 컴포넌트
+// 코스 평가 컴포넌트 - 리뷰 제출 핸들러에서 댓글을 백엔드에 업데이트하고 불러올 예정
 const CourseRating: React.FC<{
   rating: number;
   onRatingChange: (value: number) => void;
@@ -173,14 +208,41 @@ const CourseRating: React.FC<{
   );
 };
 
-// 코스 이미지 컴포넌트
-const CourseImage: React.FC<{ imageUrl?: string }> = ({ imageUrl }) => (
+// 코스 이미지 컴포넌트 - imageUrlList 배열을 순회하여 각 이미지를 표시
+
+const CourseImage: React.FC<{ imageUrlList: string[] }> = ({
+  imageUrlList,
+}) => (
   <div style={{ textAlign: "center", marginBottom: "20px", marginTop: "20px" }}>
-    <img
-      src={imageUrl || I.randomImage(800, 600)}
-      alt="Course"
-      style={{ width: "100%", maxHeight: "300px", objectFit: "cover" }}
-    />
+    {imageUrlList.length === 0 ? (
+      <img
+        src={"Course"}
+        alt={"Course"}
+        style={{
+          width: "100%",
+          maxHeight: "300px",
+          objectFit: "cover",
+          marginBottom: "10px",
+        }}
+      />
+    ) : (
+      <Carousel arrows>
+        {imageUrlList.map((imageUrl, index) => (
+          <div key={index}>
+            <img
+              src={imageUrl}
+              alt={`Course`}
+              style={{
+                width: "100%",
+                maxHeight: "300px",
+                objectFit: "cover",
+                marginBottom: "10px",
+              }}
+            />
+          </div>
+        ))}
+      </Carousel>
+    )}
   </div>
 );
 
@@ -188,52 +250,58 @@ const CourseImage: React.FC<{ imageUrl?: string }> = ({ imageUrl }) => (
 const CourseDetailPage: React.FC = () => {
   const { courseId } = useParams<{ courseId: string }>(); // URL에서 courseId 받아옴
   const [course, setCourse] = useState<CourseDetail | null>(null);
-  const [comments, setComments] = useState<{ text: string; date: string }[]>(
-    []
-  );
+  const [comments, setComments] = useState<
+    {
+      comment_content: string;
+      createdAt: string;
+      nickname: string;
+      starPoint: number;
+    }[]
+  >([]);
   const [loading, setLoading] = useState(true); // 로딩 상태 관리
   const [userReview, setUserReview] = useState(""); // 사용자 리뷰 상태
   const [userRating, setUserRating] = useState(3); // 기본값 3점
   const [inProp, setInProp] = useState(true);
 
   const handleBack = () => {
-    // 슬라이드 애니메이션을 시작하기 위해 inProp을 false로 설정
     setInProp(false);
-    // 일정 시간이 지난 후 페이지 이동
     setTimeout(() => {
-      // 페이지 이동
-      window.location.href = "/course-select"; // 또는 react-router-dom의 history.push를 사용 가능
-    }, 300); // 애니메이션 시간과 맞춰서 설정
+      window.location.href = "/course-select";
+    }, 300);
   };
+
   // 백엔드에서 데이터 가져오기
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`/course-api/:${courseId}`);
+        const response = await axios.get(`/course-api/${courseId}`);
+        console.log(response.data);
         setCourse(response.data);
-        setComments(response.data.comments);
+        setComments(response.data.comment);
         setLoading(false);
       } catch (error) {
         console.error("Error fetching course data:", error);
         setLoading(false);
       }
     };
-
     fetchData();
   }, [courseId]);
 
+  // 리뷰 제출 핸들러 - 리뷰 제출 후 백엔드로 업데이트 요청 후 댓글 갱신
   const handleReviewSubmit = () => {
     if (userReview.trim() === "") return;
     const newComment = {
-      text: userReview,
-      date: new Date().toISOString().split("T")[0],
+      comment_content: userReview,
+      createdAt: new Date().toISOString().split("T")[0],
+      nickname: "익명",
+      starPoint: userRating,
     };
-    setComments([newComment, ...comments]); // 새로운 댓글을 추가
+    setComments([...comments, newComment]); // 새로운 댓글을 추가
     setUserReview(""); // 입력 필드를 초기화
   };
 
   const handleReviewChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setUserReview(e.target.value); // 이벤트에서 입력된 값으로 상태 업데이트
+    setUserReview(e.target.value);
   };
 
   if (loading) return <div>Loading...</div>; // 로딩 중일 때 로딩 표시
@@ -262,9 +330,11 @@ const CourseDetailPage: React.FC = () => {
         </span>
       </Link>
 
-      {/* 코스 이미지 */}
+      {/* 코스 이미지 섹션 - course의 imageUrlList 데이터를 처리 */}
       <div style={{ borderRadius: "15px" }}>
-        <CourseImage imageUrl={course?.imageUrl} />
+        {course?.imageUrlList && (
+          <CourseImage imageUrlList={course.imageUrlList} />
+        )}
       </div>
 
       {/* 코스 제목 및 별점 */}
@@ -278,26 +348,24 @@ const CourseDetailPage: React.FC = () => {
         <div>
           <h1 style={{ fontSize: "24px", fontWeight: "bold", margin: 0 }}>
             {course?.title.slice(0, 12)}{" "}
-            {course?.ratingCount ? `(${course.ratingCount})` : ""} {/* 제목 */}
+            {course?.countStarPoint ? `(${course.countStarPoint})` : ""}
           </h1>
         </div>
         <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
           <span style={{ fontSize: "16px", color: "#FFD700" }}>
-            {course?.meanRating.toFixed(1)} <StarFilled />
+            {course?.meanStarPoint.toFixed(1)} <StarFilled />
           </span>
         </div>
       </div>
 
-      {/* 핫플레이스 섹션 */}
+      {/* 핫플레이스 섹션 - course.spots의 데이터를 핫플레이스에 사용 */}
       <div style={{ margin: "20px 0" }}>
-        <HotPlaceList />
+        {course?.spots && <HotPlaceList spots={course.spots} />}
       </div>
 
       {/* 코스 경로 이미지 */}
-      <div style={{ textAlign: "center", marginBottom: "20px" }}>
-        <h2
-          style={{ fontSize: "20px", textAlign: "left", marginBottom: "10px" }}
-        >
+      {/* <div style={{ textAlign: "center", marginBottom: "20px" }}>
+        <h2 style={{ fontSize: "20px", textAlign: "left", marginBottom: "10px" }}>
           코스 경로
         </h2>
         <img
@@ -310,9 +378,9 @@ const CourseDetailPage: React.FC = () => {
             borderRadius: "10px",
           }}
         />
-      </div>
+      </div> */}
 
-      {/* 댓글 섹션 */}
+      {/* 댓글 섹션 - course.comment의 내용으로 채움 */}
       <CommentList comments={comments} />
 
       {/* 코스 평가 섹션 */}
@@ -328,7 +396,3 @@ const CourseDetailPage: React.FC = () => {
 };
 
 export default CourseDetailPage;
-
-function setLoading(arg0: boolean) {
-  throw new Error("Function not implemented.");
-}

@@ -6,3 +6,10 @@ interface Spot {
 }
 
 export default Spot;
+
+export interface spotUseCourse {
+    id: number;
+    Spot_Name: string;
+    Category: string;
+    icon: string;
+  }
