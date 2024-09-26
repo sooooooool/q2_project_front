@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { Button, Rate, Input, List, Row, Col } from "antd";
 import { StarFilled, ArrowLeftOutlined } from "@ant-design/icons";
 import { Carousel } from "antd";
@@ -11,6 +11,8 @@ import HotPlaceIcon2 from "../assets/images/HotPlaceIcon2.svg";
 import HotPlaceIcon3 from "../assets/images/HotPlaceIcon3.svg";
 import HotPlaceIcon4 from "../assets/images/HotPlaceIcon4.svg";
 import SubmitIcon from "../assets/images/SubmitIcon.svg";
+import { encode2queryData } from "../services/encode"; // 인코딩 함수 불러오기
+import { useAuth } from "../context/AuthContext";
 
 export interface spotUseCourse {
   id: number;
@@ -262,6 +264,8 @@ const CourseDetailPage: React.FC = () => {
   const [userReview, setUserReview] = useState(""); // 사용자 리뷰 상태
   const [userRating, setUserRating] = useState(3); // 기본값 3점
   const [inProp, setInProp] = useState(true);
+  const { user } = useAuth(); // 사용자 정보 가져오기
+  const navigate = useNavigate();
 
   const handleBack = () => {
     setInProp(false);
@@ -288,16 +292,40 @@ const CourseDetailPage: React.FC = () => {
   }, [courseId]);
 
   // 리뷰 제출 핸들러 - 리뷰 제출 후 백엔드로 업데이트 요청 후 댓글 갱신
-  const handleReviewSubmit = () => {
+  const handleReviewSubmit = async () => {
     if (userReview.trim() === "") return;
-    const newComment = {
-      comment_content: userReview,
-      createdAt: new Date().toISOString().split("T")[0],
-      nickname: "익명",
-      starPoint: userRating,
-    };
-    setComments([...comments, newComment]); // 새로운 댓글을 추가
-    setUserReview(""); // 입력 필드를 초기화
+    try {
+      await axios.post(`/comment-api/`, {
+        comment_content: userReview,
+        starPoint: userRating,
+        F_User_id: user?.id,
+        F_Course_id: courseId,
+      });
+    } catch (error) {
+        console.error("Error submitting review:", error);
+      }
+    try {
+      await axios.put(`/course-api/starpoint/${courseId}`, {
+        addStarPoint: userRating
+      });
+    } catch (error) {
+        console.error("Error updating review:", error);
+      }
+      setUserReview(""); // 입력 필드를 초기화
+      navigate(`/course-detail/${courseId}`); // 코스 상세 페이지로 이동
+      // 새로운 댓글 데이터 가져오기
+    //   const query = { course: courseId };
+    //   console.log("This is query: ",query);
+    //   const encodedQuery = encode2queryData(query); // 쿼리 데이터 인코딩
+
+    // try {
+    //   const response = await axios.get(`/comment-api?data=${encodedQuery}`);
+    //   console.log("This is comment Get data: ",response.data);
+    //   setComments(response.data.comments);
+    //   setUserReview(""); // 입력 필드를 초기화
+    // } catch (error) {
+    //   console.error("Error submitting review:", error);
+    // }
   };
 
   const handleReviewChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -362,6 +390,23 @@ const CourseDetailPage: React.FC = () => {
       <div style={{ margin: "20px 0" }}>
         {course?.spots && <HotPlaceList spots={course.spots} />}
       </div>
+
+      {/* 코스 경로 이미지 */}
+      {/* <div style={{ textAlign: "center", marginBottom: "20px" }}>
+        <h2 style={{ fontSize: "20px", textAlign: "left", marginBottom: "10px" }}>
+          코스 경로
+        </h2>
+        <img
+          src={ExampleImage}
+          alt="Course Route"
+          style={{
+            width: "100%",
+            height: "300px",
+            objectFit: "cover",
+            borderRadius: "10px",
+          }}
+        />
+      </div> */}
 
       {/* 댓글 섹션 - course.comment의 내용으로 채움 */}
       <CommentList comments={comments} />
