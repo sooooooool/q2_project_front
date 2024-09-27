@@ -10,6 +10,7 @@ import HotPlaceIcon1 from "../assets/images/HotPlaceIcon1.svg";
 import HotPlaceIcon2 from "../assets/images/HotPlaceIcon2.svg";
 import HotPlaceIcon3 from "../assets/images/HotPlaceIcon3.svg";
 import HotPlaceIcon4 from "../assets/images/HotPlaceIcon4.svg";
+import LoginModal from "../components/Common/LoginModal";
 
 // 인터페이스 정의
 export interface spotUseCourse {
@@ -101,7 +102,7 @@ const HotPlaceList: React.FC<{ spots: spotUseCourse[] }> = ({ spots }) => {
               <span style={{ fontSize: "16px", fontWeight: "bold" }}>
                 {place.Spot_Name}
               </span>
-              <span>({place.Category})</span>
+              {/* <span>({place.Category})</span> */}
             </div>
           </Col>
         ))}
@@ -286,8 +287,17 @@ const CourseDetailPage: React.FC = () => {
   const [userRating, setUserRating] = useState(3);
   const { user } = useAuth();
   const [commentChange, setCommentChange] = useState(1);
+  const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
 
-  const navigate = useNavigate();
+  // 로그인 버튼 클릭 시 모달 열기
+  const handleLoginClick = () => {
+    setIsLoginModalVisible(true);
+  };
+
+  // 모달 닫기
+  const handleCloseModal = () => {
+    setIsLoginModalVisible(false);
+  };
 
   const handleBack = () => {
     setTimeout(() => {
@@ -367,6 +377,22 @@ const CourseDetailPage: React.FC = () => {
             {course?.countStarPoint ? `(${course.countStarPoint})` : ""}
           </h1>
         </div>
+      </div>
+
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+        }}
+      >
+        <div>
+          {course?.spots.map((spot) => (
+            <span style={{ backgroundColor: "#f7f7f7", borderRadius: "10px" }}>
+              {spot.Category}
+            </span>
+          ))}
+        </div>
         <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
           <span style={{ fontSize: "16px", color: "#FFD700" }}>
             {course?.meanStarPoint.toFixed(1)} <StarFilled />
@@ -374,17 +400,53 @@ const CourseDetailPage: React.FC = () => {
         </div>
       </div>
 
+      <div
+        style={{
+          width: "100%",
+          fontSize: "16px",
+          fontWeight: 500,
+          lineHeight: "24px",
+        }}
+      >
+        <p style={{ marginBlockStart: 0, marginBlockEnd: "2px" }}>
+          {course?.content}
+        </p>
+      </div>
+
       {course?.spots && <HotPlaceList spots={course.spots} />}
 
       <CommentList comments={comments} />
 
-      <CourseRating
-        rating={userRating}
-        onRatingChange={setUserRating}
-        review={userReview}
-        onReviewChange={handleReviewChange}
-        onSubmit={handleReviewSubmit}
-      />
+      {user ? (
+        <CourseRating
+          rating={userRating}
+          onRatingChange={setUserRating}
+          review={userReview}
+          onReviewChange={handleReviewChange}
+          onSubmit={handleReviewSubmit}
+        />
+      ) : (
+        <div
+          style={{
+            padding: "16px",
+            backgroundColor: "#f7f7f7",
+            borderRadius: "10px",
+            border: "1px solid #e0e0e0",
+            display: "flex",
+            flexDirection: "column",
+            gap: "16px",
+            marginTop: "15px",
+            textAlign: "center",
+          }}
+        >
+          <h3 style={{ margin: 0 }}>코스 평가</h3>
+          <p>로그인 후에 평가를 작성할 수 있습니다.</p>
+          <Button type="primary" onClick={handleLoginClick}>
+            로그인
+          </Button>
+        </div>
+      )}
+      <LoginModal visible={isLoginModalVisible} onClose={handleCloseModal} />
     </div>
   );
 };
