@@ -374,7 +374,7 @@ const CourseDetailPage: React.FC = () => {
         <div>
           <h1 style={{ fontSize: "24px", fontWeight: "bold", margin: 0 }}>
             {course?.title.slice(0, 12)}{" "}
-            {course?.countStarPoint ? `(${course.countStarPoint})` : ""}
+            {/* {course?.countStarPoint ? `(${course.countStarPoint})` : ""} */}
           </h1>
         </div>
       </div>
@@ -388,8 +388,8 @@ const CourseDetailPage: React.FC = () => {
       >
         <div>
           {course?.spots.map((spot) => (
-            <span style={{ backgroundColor: "#f7f7f7", borderRadius: "10px" }}>
-              {spot.Category}
+            <span style={{ fontSize:"14px", backgroundColor: "#f7f7f7", borderRadius: "10px" }}>
+              #{spot.Category}
             </span>
           ))}
         </div>
