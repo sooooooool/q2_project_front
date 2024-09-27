@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { Button, Rate, Input, List, Row, Col } from "antd";
 import { StarFilled, ArrowLeftOutlined } from "@ant-design/icons";
 import { Carousel } from "antd";
@@ -373,8 +373,7 @@ const CourseDetailPage: React.FC = () => {
       >
         <div>
           <h1 style={{ fontSize: "24px", fontWeight: "bold", margin: 0 }}>
-            {course?.title.slice(0, 12)}{" "}
-            {/* {course?.countStarPoint ? `(${course.countStarPoint})` : ""} */}
+            {course?.title.slice(0, 12)}
           </h1>
         </div>
       </div>
@@ -384,11 +383,20 @@ const CourseDetailPage: React.FC = () => {
           display: "flex",
           justifyContent: "space-between",
           alignItems: "center",
+          marginTop: "10px", // 제목과 태그 사이 간격 추가
         }}
       >
         <div>
           {course?.spots.map((spot) => (
-            <span style={{ fontSize:"14px", backgroundColor: "#f7f7f7", borderRadius: "10px" }}>
+            <span
+              style={{
+                fontSize: "14px",
+                backgroundColor: "#f7f7f7",
+                borderRadius: "10px",
+                padding: "5px 10px", // 패딩 추가
+                marginRight: "5px",
+              }}
+            >
               #{spot.Category}
             </span>
           ))}
@@ -406,6 +414,10 @@ const CourseDetailPage: React.FC = () => {
           fontSize: "16px",
           fontWeight: 500,
           lineHeight: "24px",
+          backgroundColor: "#f7f7f7", // 회색 배경 추가
+          borderRadius: "10px", // 모서리 둥글기 추가
+          padding: "16px", // 내용에 패딩 추가
+          marginTop: "15px", // 코스 내용과 스팟 사이 간격 추가
         }}
       >
         <p style={{ marginBlockStart: 0, marginBlockEnd: "2px" }}>
@@ -413,7 +425,13 @@ const CourseDetailPage: React.FC = () => {
         </p>
       </div>
 
-      {course?.spots && <HotPlaceList spots={course.spots} />}
+      {course?.spots && (
+        <div style={{ marginTop: "15px" }}>
+          {" "}
+          {/* 코스와 스팟 사이 간격 추가 */}
+          <HotPlaceList spots={course.spots} />
+        </div>
+      )}
 
       <CommentList comments={comments} />
 

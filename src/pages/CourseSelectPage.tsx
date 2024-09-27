@@ -67,10 +67,12 @@ const CourseSelectPage = () => {
       {/* 상단 필터 영역 */}
       <div
         style={{
-          textAlign: "center",
+          display: "flex", // display: flex로 변경하여 오른쪽 정렬
+          justifyContent: "flex-end", // 오른쪽 정렬
           fontSize: "17px",
           fontWeight: "bold",
           marginBottom: "20px",
+          paddingRight: "30px", // 적절한 padding을 추가해 정렬 위치를 맞춤
         }}
       >
         <Dropdown menu={{ items: menuItems, onClick: handleMenuClick }}>

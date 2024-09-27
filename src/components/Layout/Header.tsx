@@ -1,46 +1,62 @@
 import React, { useState } from "react";
 import { Layout, Tooltip } from "antd";
 import { HomeOutlined, LoginOutlined } from "@ant-design/icons";
+import { useLocation } from "react-router-dom";
 import LoginModal from "../Common/LoginModal";
 import CustomLink from "../Common/Link";
 import { useAuth } from "../../context/AuthContext";
-import UserDropdown from "../MyPage/UserDropdown"; // UserDropdown 컴포넌트 가져오기
+import UserDropdown from "../MyPage/UserDropdown";
 
 const { Header } = Layout;
 
+// 지역 데이터 (번호에 따른 지역명)
+const locationData: { [key: number]: string } = {
+  1: "성수",
+  2: "홍대",
+  3: "합정",
+  4: "강남",
+  5: "신촌",
+  6: "건대",
+};
+
+// 헤더 컴포넌트
 const CustomHeader: React.FC = () => {
   const [isLoginModalVisible, setIsLoginModalVisible] = useState(false);
-  const { login, logout, user } = useAuth(); // Context에서 로그인/로그아웃 상태 및 함수 불러오기
+  const { user } = useAuth();
+  const location = useLocation();
 
-  // 로그인 버튼 클릭 시 모달 열기
+  // location.search에서 value 값을 추출해 해당 지역명을 반환
+  const getLocationName = (): string | null => {
+    const params = new URLSearchParams(location.search);
+    const value = params.get("value");
+
+    // value를 숫자로 변환하고 해당 값이 locationData에 존재하는지 확인
+    const numValue = Number(value);
+    if (numValue in locationData) {
+      return locationData[numValue]; // 해당 값이 있으면 지역명 반환
+    }
+    return ""; // 값이 없거나 유효하지 않은 경우 빈 문자열 반환
+  };
+
+  // 로그인 모달 처리 함수
   const handleLoginClick = () => {
     setIsLoginModalVisible(true);
   };
 
-  // 모달 닫기
   const handleCloseModal = () => {
     setIsLoginModalVisible(false);
   };
 
-  // 로그인 처리
-  const handleLogin = (userData: {
-    id: number;
-    email: string;
-    nick: string;
-  }) => {
-    login(userData); // 로그인 함수 호출
-    setIsLoginModalVisible(false); // 로그인 후 모달 닫기
-  };
-
+  // 스타일 정의
   const headerStyle: React.CSSProperties = {
     backgroundColor: "transparent",
     display: "flex",
-    justifyContent: "space-between", // 양쪽 끝에 배치
+    justifyContent: "space-between",
     alignItems: "center",
     height: "100px",
-    padding: "0 70px", // 양쪽에 적절한 패딩 추가
+    padding: "0 70px",
     margin: "20px 0",
-    position: "relative", // 성수를 가운데 배치하기 위해 상대적 위치 지정
+    position: "relative",
   };
 
   const iconStyle: React.CSSProperties = {
@@ -52,13 +68,13 @@ const CustomHeader: React.FC = () => {
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
-    width: "480px", // 아이콘 간의 간격을 조정
+    width: "480px",
   };
 
   const titleStyle: React.CSSProperties = {
-    position: "absolute", // 성수를 정확히 중앙에 배치하기 위해 절대 위치 지정
+    position: "absolute",
     left: "50%",
-    transform: "translateX(-50%)", // 중앙 정렬을 위해 변환
+    transform: "translateX(-50%)",
     fontSize: "32px",
     fontWeight: "bold",
     margin: "0",
@@ -67,7 +83,7 @@ const CustomHeader: React.FC = () => {
 
   return (
     <Header style={headerStyle}>
-      {/* 왼쪽에 위치할 홈 아이콘 */}
+      {/* 왼쪽 홈 아이콘 */}
       <div style={iconWrapperStyle}>
         <CustomLink
           to="/"
@@ -75,14 +91,11 @@ const CustomHeader: React.FC = () => {
           tooltip="Go to Home"
         />
 
-        {/* 오른쪽에 위치할 로그인/로그아웃 또는 유저 드롭다운 */}
+        {/* 오른쪽 로그인/로그아웃 또는 유저 드롭다운 */}
         <div className="loginlogout">
-          {/* 로그인 여부에 따라 버튼 변경 */}
           {user ? (
-            // 로그인 상태: UserDropdown (마이페이지)
             <UserDropdown />
           ) : (
-            // 로그아웃 상태: LoginOutlined 아이콘
             <Tooltip title="Login">
               <LoginOutlined
                 onClick={handleLoginClick}
@@ -93,8 +106,8 @@ const CustomHeader: React.FC = () => {
         </div>
       </div>
 
-      {/* 가운데에 위치한 성수 글씨 */}
-      <div style={titleStyle}>성수</div>
+      {/* 가운데 지역명 표시 (value 값이 있을 때만) */}
+      {getLocationName() && <div style={titleStyle}>{getLocationName()}</div>}
 
       {/* 로그인 모달 */}
       <LoginModal visible={isLoginModalVisible} onClose={handleCloseModal} />
