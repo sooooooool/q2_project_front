@@ -42,7 +42,7 @@ const useFetchCourses = () => {
           title: course.title,
           userName: course.userName,
           tags: course.tags,
-          imageUrl: course.imageUrl || I.randomImage(800, 600),
+          imageUrl: course.imageUrl,
           meanrating: course.meanStarPoint,
         }))
       );

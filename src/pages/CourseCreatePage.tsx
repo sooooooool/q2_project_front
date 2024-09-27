@@ -150,7 +150,7 @@ const CourseCreatePage: React.FC = () => {
             fileList={fileList}
             onChange={({ fileList }) => setFileList(fileList)}
             beforeUpload={(file) => {
-              const isValidSize = file.size / 1024 / 1024 < 3; // Limit to 3MB
+              const isValidSize = file.size / 1024 / 1024 < 15; // Limit to 15MB
               if (!isValidSize) {
                 message.error("파일 크기는 2MB를 초과할 수 없습니다.");
               }

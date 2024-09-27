@@ -10,6 +10,7 @@ import {
 } from "antd";
 import { StarFilled } from "@ant-design/icons";
 import { CourseSummary } from "../../types";
+import Mylogo from "../../assets/images/mylogo.svg";
 
 const { Text } = Typography;
 
@@ -45,10 +46,16 @@ const CourseCard: React.FC<CourseSummary> = ({
     >
       <AntCard.Meta
         avatar={
+          imageUrl ?
           <Avatar
             shape="square"
             size={120}
             src={<img src={imageUrl} alt="NotFound" loading="lazy" />}
+          />
+          : <Avatar
+          shape="square"
+          size={120}
+          src={<img src={Mylogo} alt="NotFound" loading="lazy" />}
           />
         }
         title={title}
