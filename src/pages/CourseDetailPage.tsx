@@ -265,6 +265,7 @@ const CourseDetailPage: React.FC = () => {
   const [userRating, setUserRating] = useState(3); // 기본값 3점
   const [inProp, setInProp] = useState(true);
   const { user } = useAuth(); // 사용자 정보 가져오기
+  const [commentChange, setCommentChange] = useState(1);
   const navigate = useNavigate();
 
   const handleBack = () => {
@@ -289,7 +290,7 @@ const CourseDetailPage: React.FC = () => {
       }
     };
     fetchData();
-  }, [courseId]);
+  }, [courseId,commentChange]);
 
   // 리뷰 제출 핸들러 - 리뷰 제출 후 백엔드로 업데이트 요청 후 댓글 갱신
   const handleReviewSubmit = async () => {
@@ -311,8 +312,12 @@ const CourseDetailPage: React.FC = () => {
     } catch (error) {
         console.error("Error updating review:", error);
       }
+    try{
       setUserReview(""); // 입력 필드를 초기화
-      navigate(`/course-detail/${courseId}`); // 코스 상세 페이지로 이동
+      setCommentChange((prev)=>prev+1) // 코스 상세 페이지로 이동
+    } catch (error) {
+      console.error("Error navigating to course detail page:", error);
+    }
       // 새로운 댓글 데이터 가져오기
     //   const query = { course: courseId };
     //   console.log("This is query: ",query);
